@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <math.h>
+
+
+double f2(double br,int start, int end, int count,int cache)
+{
+    if(count==1)
+    {
+        if(cache%2==0)
+        {
+            return sqrt(start/br);
+        }
+        else
+        {
+            return sqrt(end/br);
+        }
+    }
+
+    else
+    {
+        if(cache%2==0)
+        {
+        if(count%2==0)
+        {
+
+            return sqrt(end/br+f2(br-2,start,end-1,count-1,cache));
+        }
+        else
+        {
+            return sqrt(start/br+f2(br-2,start+1,end,count-1,cache));
+        }
+    }
+    else
+    {
+        if(count%2==1)
+        {
+            return sqrt(end/br+f2(br-2,start,end-1,count-1,cache));
+        }
+        else
+        {
+            return sqrt(start/br+f2(br-2,start+1,end,count-1,cache));
+    }
+    }
+    }
+}
+
+
+
+
+double f2_i(int n)
+{
+    int start;
+    int end;
+    double sum=0;
+    double br=2;
+    if(n%2==1)
+    {
+    start=n/2;
+    end=(n+1)/2;
+    for(int i=1;i<=n;i++)
+    {
+        if(i%2==1)
+        {
+            sum=sqrt((end/br)+sum);
+            end+=1;
+            br+=2;
+
+        }
+        if(i%2==0)
+        {
+            sum=sqrt((start/br)+sum);
+            start-=1;
+            br+=2;
+
+        }
+    }
+    }
+    else
+    {
+     start=(n+2)/2;
+     end=(n+1)/2;
+     for(int i=1;i<=n;i++)
+    {
+        if(i%2==1)
+        {
+            sum=sqrt((end/br)+sum);
+            end-=1;
+            br+=2;
+        }
+        if(i%2==0)
+        {
+            sum=sqrt((start/br)+sum);
+            start+=1;
+            br+=2;
+        }
+    }
+    }
+    return sum;
+}
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    printf("%lf\n",f2(n*2,1,n,n,n));
+    printf("%lf",f2_i(n));
+    return 0;
+}
