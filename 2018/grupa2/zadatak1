@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <math.h>
+
+
+int fibonacci(int n) {
+    int t1 = 0, t2 = 1, nextTerm = 0;
+
+    for (int i = 1; i <= n; ++i) {
+        nextTerm = t1 + t2;
+        t1 = t2;
+        t2 = nextTerm;
+    }
+    return t1;
+}
+
+
+double f1_i(int n)
+{
+    int wrx=n;
+
+
+    double sum=0;
+    double count=6;
+    double fib=fibonacci(n);
+    double br=fib;
+    n-=1;
+    fib=fibonacci(n);
+        if(wrx%2==1)
+        {
+    for(int i=1;i<wrx;i++)
+    {
+        if(i%2==1)
+        {
+           sum=fib-count/br;
+           br=sum;
+           fib=fibonacci(n-1);
+           n-=1;
+           count+=3;
+        }
+        if(i%2==0)
+        {
+           sum=fib+count/br;
+           br=sum;
+           fib=fibonacci(n-1);
+           n-=1;
+           count+=3;
+        }
+    }
+}
+else
+ {
+    for(int i=1;i<wrx;i++)
+    {
+        if(i%2==1)
+        {
+           sum=fib+count/br;
+           br=sum;
+           fib=fibonacci(n-1);
+           n-=1;
+           count+=3;
+        }
+        if(i%2==0)
+        {
+           sum=fib-count/br;
+           br=sum;
+           fib=fibonacci(n-1);
+           n-=1;
+           count+=3;
+        }
+    }
+}
+
+        return sum;
+
+}
+
+double f1(double n,int cache,int safe,double fib)
+{
+    if(cache==1)
+    {
+        return fibonacci(safe);
+    }
+    else
+    {
+        if(safe%2==0)
+        {
+            if(cache%2==0)
+            {
+                return fibonacci(fib)+n/f1(n-3,cache-1,safe,fib+1);
+            }
+            if(cache%2==1)
+            {
+                return fibonacci(fib)-n/f1(n-3,cache-1,safe,fib+1);
+            }
+        }
+        if(safe%2==1)
+        {
+            if(cache%2==0)
+            {
+                return fibonacci(fib)-n/f1(n-3,cache-1,safe,fib+1);
+            }
+            if(cache%2==1)
+            {
+                return fibonacci(fib)+n/f1(n-3,cache-1,safe,fib+1);
+            }
+        }
+    }
+}
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    printf("%lf\n",f1(n*3,n,n,1));
+    printf("%lf",f1_i(n));
+
+
+}
