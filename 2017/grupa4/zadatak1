@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <math.h>
+
+double f1_i(int n)
+{
+    double sum=0;
+    int i;
+    int count=n;
+    double br=21;
+    for(i=1;i<n;i++)
+    {
+        count+=i;
+    }
+
+    double broj=count;
+    count-=n-1;
+    for(i=n-2;i>=0;i--)
+    {
+        sum=count+br/broj;
+        broj=sum;
+        count-=i;
+        br+=11;
+
+    }
+    return sum;
+
+}
+
+double f1(double n,int i,double count, int cache)
+{
+    if(cache==0)
+        return n/count;
+    else {
+            count+=i;
+        return count+n/f1(n-11,i+1,count,cache-1);
+         }
+}
+
+
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    printf("%lf\n",f1(n*11-1,0,n,n));
+    printf("%lf\n",f1_i(n));
+    return 0;
+}
