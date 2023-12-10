@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <math.h>
+
+double f1_i(int n)
+{
+    double count=n;
+    double sum=0;
+    int i;
+    double start=10;
+    for(i=1;i<n;i++)
+    {
+        count+=i;
+    }
+    for(i=n-1;i>=0;i--)
+    {
+        sum=sqrt((start/count)+sum);
+        count-=i;
+        start+=11;
+    }
+    return sum;
+}
+
+double f1(double n,double i,double count,int cache)
+{
+    if(cache==1)
+    {
+        return sqrt(n/i);
+    }
+    else
+    {
+        return sqrt(n/count+f1(n-11,i+1,count,cache-1));
+    }
+}
+
+
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    printf("%lf\n",f1(n*10+n-1,0,n,n));
+    printf("%lf\n",f1_i(n));
+    return 0;
+}
