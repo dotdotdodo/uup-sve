@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <math.h>
+
+int isPrime(int num) {
+    if (num < 2) {
+        return 0;
+    }
+    for (int i = 2; i * i <= num; i++) {
+        if (num % i == 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+
+int findNthPrime(int n) {
+    int count = 0;
+    int num = 2;
+    while (count < n) {
+        if (isPrime(num)) {
+            count++;
+            if (count == n) {
+                return num;
+            }
+        }
+        num++;
+    }
+
+    return -1;
+}
+
+
+double f1_i(int n)
+{
+    int i;
+    int exe=n;
+   double sum=0;
+   double count=findNthPrime(n-1);
+   double shift='A'-0;
+   double br=shift;
+   shift+=1;
+   for(i=1;i<exe;i++)
+   {
+       if(i%2==1)
+       {
+           sum=shift-count/br;
+           br=sum;
+           n-=1;
+           shift+=1;
+           count=findNthPrime(n-1);
+       }
+        if(i%2==0)
+       {
+           sum=shift+count/br;
+           br=sum;
+           n-=1;
+           shift+=1;
+           count=findNthPrime(n-1);
+       }
+   }
+return sum;
+
+}
+
+
+double f1(double n,int count,double shift,int cache)
+{
+    if(cache==1)
+    {
+        return shift;
+    }
+    else
+    {
+        if(cache%2==1)
+        {
+            return (shift+n)+findNthPrime(count)/f1(n-1,count+1,shift,cache-1);
+        }
+        if(cache%2==0)
+        {
+            return (shift+n)-findNthPrime(count)/f1(n-1,count+1,shift,cache-1);
+        }
+    }
+}
+
+
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    printf("%lf\n",f1_i(n));
+    int shift='A'-0;
+    printf("%lf\n",f1(n-1,1,shift,n));
+    return 0;
+}
