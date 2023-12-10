@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+double f1_i(int n)
+{
+    int start;
+    int end;
+    double sum=0;
+    int i;
+    double count=4;
+    double br;
+    if(n%2==0)
+    {
+        start=n/2;
+        end=(n+2)/2;
+        br=start;
+        start-=1;
+    for(i=1;i<n;i++)
+    {
+        if(i%2==1)
+        {
+            sum=end+count/br;
+            br=sum;
+            end+=1;
+            count+=2;
+        }
+        else if(i%2==0)
+        {
+            sum=start+count/br;
+            br=sum;
+            start-=1;
+            count+=2;
+        }
+    }
+    }
+    if(n%2==1)
+    {
+        end=(n+2)/2;
+        start=n/2;
+        br=end;
+        end+=1;
+        for(i=1;i<n;i++)
+        {
+            if(i%2==1)
+            {
+                sum=start+count/br;
+                start-=1;
+                count+=2;
+                br=sum;
+            }
+            else if(i%2==0)
+            {
+                sum=end+count/br;
+                end+=1;
+                count+=2;
+                br=sum;
+            }
+        }
+
+    }
+    return sum;
+}
+
+double f1(double n, int start, int end,int cache,int i)
+{
+    if(cache==1)
+    {
+            return start;
+    }
+    else
+    {
+        if(i%2==0)
+        {
+        if(cache%2==0)
+        {
+            return end+n/f1(n-2,start,end-1,cache-1,i);
+        }
+        else if(cache%2==1)
+        {
+            return start+n/f1(n-2,start+1,end,cache-1,i);
+        }
+        }
+        if(i%2==1)
+        {
+            if(cache%2==1)
+        {
+            return end+n/f1(n-2,start,end-1,cache-1,i);
+        }
+        else if(cache%2==0)
+        {
+            return start+n/f1(n-2,start+1,end,cache-1,i);
+        }
+        }
+    }
+}
+
+
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    printf("%lf\n",f1(n*2,1,n,n,n));
+    printf("%lf\n",f1_i(n));
+    return 0;
+}
