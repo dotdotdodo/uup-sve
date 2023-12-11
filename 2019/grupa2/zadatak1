@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <math.h>
+
+int faktorijal(int n)
+{
+    if(n==0)
+        return 1;
+    else return n* faktorijal(n-1);
+}
+
+double f1_i(int n)
+{
+    double sum=0;
+    if (n%2==0)
+    {
+         /// ovi za faktorijal
+        double start1=n/2;
+        double end1=(n+2)/2;
+
+        /// ovi levo
+        double start2=n/2;
+        double end2=(n+2)/2;
+
+
+        double br=end2+faktorijal(start1);
+        end2+=1;
+        start1-=1;
+        for(int i=1;i<n;i++)
+        {
+            if(i%2==1)
+            {
+                sum=start2+faktorijal(end1)/br;
+                br=sum;
+                start2-=1;
+                end1+=1;
+            }
+            if(i%2==0)
+            {
+                sum=end2+faktorijal(start1)/br;
+                br=sum;
+                start1-=1;
+                end2+=1;
+            }
+        }
+    }
+    if(n%2==1)
+    {
+        /// ovi za faktorijal
+        double end1=(n+1)/2;
+        double start1=n/2;
+
+        ///ovi za levo
+        double start2=(n+1)/2;
+        double end2=(n+3)/2;
+        double br=start2+faktorijal(end1);
+        start2-=1;
+        end1+=1;
+
+        for(int i=1;i<n;i++)
+        {
+            if(i%2==1)
+            {
+                sum=end2+faktorijal(start1)/br;
+                br=sum;
+                end2+=1;
+                start1-=1;
+            }
+            if(i%2==0)
+            {
+                sum=start2+faktorijal(end1)/br;
+                br=sum;
+                end1+=1;
+                start2-=1;
+            }
+        }
+    }
+    return sum;
+
+}
+
+
+/// dvojka je za faktorijal
+/// kec za onoj levo
+double f1(double start1, double end1,double start2, double end2,int cache, int remember)
+{
+    if (remember%2==0)
+    {
+        if(cache==1)
+        {
+        return (end1+faktorijal(start2));
+        }
+        else
+        {
+            if(cache%2==0)
+            {
+                return start1+faktorijal(end2)/f1(start1+1,end1,start2,end2-1,cache-1,remember);
+            }
+            if(cache%2==1)
+            {
+                return end1+faktorijal(start2)/f1(start1,end1-1,start2+1,end2,cache-1,remember);
+            }
+        }
+    }
+    if (remember%2==1)
+    {
+        if(cache==1)
+        {
+
+        return (start1+faktorijal(end2));
+        }
+        else
+        {
+            if(cache%2==1)
+            {
+
+                return start1+faktorijal(end2)/f1(start1+1,end1,start2,end2-1,cache-1,remember);
+            }
+            if(cache%2==0)
+            {
+
+                return end1+faktorijal(start2)/f1(start1,end1-1,start2+1,end2,cache-1,remember);
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    printf("%lf\n",f1_i(n));
+    printf("%lf\n",f1(1,n,1,n,n,n));
+    return 0;
+}
