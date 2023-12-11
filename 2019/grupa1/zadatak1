@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <math.h>
+
+
+double f1_i(int n)
+{
+    double sum=0;
+    if(n%2==0)
+    {
+       double start_dole=n/2; ///3
+       double end_dole=(n+2)/2; ///4
+
+      double  start_gore=(n+2)/2; ///4
+      double  end_gore=n/2; ///3
+
+        for(int i=1;i<=n;i++)
+        {
+            if(i%2==1)
+            {
+               sum=sqrt(start_gore/pow(end_gore,2)+sum);
+               start_gore+=1;
+               end_gore-=1;
+
+            }
+             if(i%2==0)
+            {
+
+                sum=sqrt(start_dole/pow(end_dole,2)+sum);
+                start_dole-=1;
+                end_dole+=1;
+            }
+
+        }
+    }
+    if(n%2==1)
+    {
+        double start_dole=(n+2)/2; ///4
+       double end_dole=(n+2)/2; ///4
+
+      double  start_gore=(n+4)/2; ///5
+      double  end_gore=n/2; ///3
+
+        for(int i=1;i<=n;i++)
+        {
+            if(i%2==1)
+            {
+               sum=sqrt(start_dole/pow(end_dole,2)+sum);
+               start_dole-=1;
+               end_dole+=1;
+
+
+            }
+             if(i%2==0)
+            {
+
+                sum=sqrt(start_gore/pow(end_gore,2)+sum);
+                start_gore+=1;
+                end_gore-=1;
+            }
+
+        }
+    }
+    return sum;
+    }
+
+
+
+double f1 (double gore1,double dole1, double gore2, double dole2, int cache,int remember)
+{
+    if(remember%2==0)
+    {
+        if(cache==1)
+        {
+            return sqrt(gore2/pow(dole2,2));
+        }
+        else
+        {
+            if(cache%2==0)
+            {
+                return sqrt(gore1/pow(dole1,2)+f1(gore1+1,dole1-1,gore2,dole2,cache-1,remember));
+            }
+             if(cache%2==1)
+            {
+                return sqrt(gore2/pow(dole2,2)+f1(gore1,dole1,gore2-1,dole2+1,cache-1,remember));
+            }
+        }
+    }
+    if(remember%2==1)
+    {
+        if(cache==1)
+        {
+            return sqrt(gore2/pow(dole2,2));
+        }
+        else
+        {
+            if(cache%2==1)
+            {
+                return sqrt(gore1/pow(dole1,2)+f1(gore1+1,dole1-1,gore2,dole2,cache-1,remember));
+            }
+             if(cache%2==0)
+            {
+                return sqrt(gore2/pow(dole2,2)+f1(gore1,dole1,gore2-1,dole2+1,cache-1,remember));
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    printf("%lf\n",f1_i(n));
+    printf("%lf\n",f1(1,n,n,1,n,n));
+    return 0;
+}
