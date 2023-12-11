@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <math.h>
+
+int fibonacci(int n)
+{
+    int t1=0, t2=1, next=0;
+    for(int i=1;i<=n;i++)
+    {
+        next=t1+t2;
+        t1=t2;
+        t2=next;
+    }
+    return t1;
+}
+
+
+
+
+double f1_i(int n)
+{
+    double sum=1;
+    int wrx=n;
+    double count=2;
+    for(int i=1;i<n;i++)
+    {
+        sum=sqrt(pow(count,2)+fibonacci(wrx)*sum);
+        wrx-=1;
+        count+=1;
+    }
+    return sum;
+
+}
+
+double f1 (double n,double i, int cache)
+{
+    if(cache==1)
+    {
+        return sqrt(1);
+    }
+        else
+        {
+            return sqrt(pow(n,2)+fibonacci(i)*f1(n-1,i+1,cache-1));
+        }
+    }
+
+
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+     printf("%lf\n",f1(n,2,n));
+    printf("%lf\n",f1_i(n));
+}
