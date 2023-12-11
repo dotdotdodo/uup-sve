@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <math.h>
+
+int fibonacci(int n)
+{
+    int t1=0, t2=1, next=0;
+    for(int i=1;i<=n;i++)
+    {
+        next=t1+t2;
+        t1=t2;
+        t2=next;
+    }
+    return t1;
+}
+
+
+double f1_i(int n)
+{
+    int cache=n;
+    double sum=0;
+    double count='a'-0;
+    double wrx=fibonacci(n-1);
+    double br=count;
+    count=('a'-0)+1;
+    for(int i=1;i<cache;i++)
+    {
+        if(i%2==1)
+        {
+        sum=count+wrx/br;
+        br=sum;
+        count+=1;
+        if (count>100)
+        {
+            count='a'-0;
+        }
+        n-=1;
+        wrx=fibonacci(n-1);
+        }
+         if(i%2==0)
+         {
+        sum=count-wrx/br;
+        br=sum;
+        count+=1;
+         if (count>100)
+        {
+            count='a'-0;
+        }
+        n-=1;
+        wrx=fibonacci(n-1);
+         }
+    }
+
+    return sum;
+}
+
+double f1 (double n,double i, int cache,int remember)
+{
+    if (cache==1)
+    {
+        return n;
+    }
+    else
+    {
+        if(remember%2==0)
+        {
+        if(cache%2==0)
+        {
+            if(n<97)
+            {
+                n=100;
+            }
+            return n+fibonacci(i)/f1(n-1,i+1,cache-1,remember);
+        }
+        if(cache%2==1)
+        {
+            if(n<97)
+            {
+                n=100;
+            }
+            return n-fibonacci(i)/f1(n-1,i+1,cache-1,remember);
+        }
+    }
+}
+if(remember%2==1)
+{
+    {
+        if(cache%2==0)
+        {
+            if(n>100)
+            {
+                n=97;
+            }
+            return n+fibonacci(i)/f1(n-1,i+1,cache-1,remember);
+        }
+        if(cache%2==1)
+        {
+            if(n>100)
+            {
+                n=97;
+            }
+            return n-fibonacci(i)/f1(n-1,i+1,cache-1,remember);
+        }
+    }
+}
+}
+
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    int sc;
+    if(n%4==0)
+    {
+        sc='d';
+    }
+     if(n%4==1)
+    {
+        sc='a';
+    }
+     if(n%4==2)
+    {
+        sc='b';
+    }
+     if(n%4==3)
+    {
+        sc='c';
+    }
+    printf("%lf\n",f1_i(n));
+    printf("%lf\n",f1(sc,1,n,n));
+}
