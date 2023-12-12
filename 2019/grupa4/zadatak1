@@ -1,0 +1,169 @@
+#include <stdio.h>
+#include <math.h>
+
+double f1_i(int n)
+{
+    double sum=0;
+    if(n%2==0)
+    {
+    /// 1 za ovo levo 2 za rekurziju
+    double start1=n;
+    double end1=n+1;
+
+    double end2=n;
+    double start2=n-1;
+
+    double counter=n/2;
+    double br=start1+pow(end2,counter);
+    counter-=1;
+    start1-=2;
+    end2+=2;
+
+    for(int i=1;i<n;i++)
+    {
+        if(i%2==1)
+        {
+            sum=pow(end1,counter)+start2/br;
+            end1+=2;
+            start2-=2;
+            br=sum;
+            counter-=1;
+            if(counter==0)
+            {
+               counter=n/2;
+            }
+        }
+        if(i%2==0)
+        {
+            sum=start1+pow(end2,counter)/br;
+            start1-=2;
+            end2+=2;
+            br=sum;
+            counter-=1;
+            if(counter==0)
+            {
+               counter=n/2;
+            }
+        }
+    }
+}
+    if(n%2==1)
+    {
+        ///1 za levo 2 za rekurziju
+        double end1=n;
+        double start1=n-1;
+
+        double start2=n;
+        double end2=n+1;
+
+        double counter=1;
+        double limiter=n/2;
+        double br=pow(end1,counter)+start2;
+        end1+=2;
+        start2-=2;
+        counter-=1;
+
+        if(counter==0)
+        {
+            counter=limiter;
+        }
+        for(int i=1;i<n;i++)
+        {
+            if(i%2==1)
+            {
+                sum=start1+pow(end2,counter)/br;
+                start1-=2;
+                end2+=2;
+                br=sum;
+                counter-=1;
+                if(counter==0)
+                {
+                counter=limiter;
+                }
+            }
+            if(i%2==0)
+            {
+                sum=pow(end1,counter)+start2/br;
+                end1+=2;
+                start2-=2;
+                br=sum;
+                 counter-=1;
+                if(counter==0)
+                {
+                counter=limiter;
+                }
+            }
+        }
+    }
+    return sum;
+}
+
+          ///  printf("%lf %lf %lf %lf %d\n",end1,start1,start2,end2,counter);
+
+double f1(double end1, double start1,double start2,double end2,int counter, int cache,int remember,int limiter)
+{
+    if (remember%2==0)
+    {
+        if(cache==1)
+        {
+
+        return start1+pow(end2,counter);
+        }
+
+    else
+    {
+        if(cache%2==0)
+        {
+            if(counter>limiter)
+            {
+                counter=1;
+            }
+
+            return pow(end1,counter)+start2/f1(end1-2,start1,start2+2,end2,counter+1,cache-1,remember,limiter);
+        }
+         if(cache%2==1)
+        {
+            if(counter>limiter)
+            {
+                counter=1;
+            }
+            return start1+pow(end2,counter)/f1(end1,start1+2,start2,end2-2,counter+1,cache-1,remember,limiter);
+        }
+    }
+    }
+    if(remember%2==1)
+    {
+        if(cache==1)
+        {
+            return pow(end1,counter)+start2;
+        }
+        else
+        {
+            if(cache%2==1)
+            {
+                if(counter>limiter)
+            {
+                counter=1;
+            }
+                return pow(end1,counter)+start2/f1(end1-2,start1,start2+2,end2,counter+1,cache-1,remember,limiter);
+            }
+            if(cache%2==0)
+            {
+                if(counter>limiter)
+            {
+                counter=1;
+            }
+                return start1+pow(end2,counter)/f1(end1,start1+2,start2,end2-2,counter+1,cache-1,remember,limiter);
+            }
+        }
+    }
+}
+
+int main()
+{
+   int n;
+   scanf("%d",&n);
+   printf("%lf\n",f1(n*2-1,2,1,n*2-2,1,n,n,n/2));
+   printf("%lf\n",f1_i(n));
+   return 0;
+}
