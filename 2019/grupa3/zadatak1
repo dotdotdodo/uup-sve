@@ -1,0 +1,144 @@
+#include <stdio.h>
+#include <math.h>
+
+double f1_i(int n)
+{
+    double sum=0;
+     if(n%2==0)
+     {
+         int counter=n/2;
+         double start=1;
+         double end=n;
+         for(int i=1;i<=n;i++)
+         {
+             if(i%2==1)
+             {
+                 sum=sqrt(start/pow(end,counter)+sum);
+                 start+=1;
+                 end+=1;
+                 counter-=1;
+                 if(counter==0)
+                 {
+                     counter=n/2;
+                 }
+             }
+             if(i%2==0)
+             {
+                 sum=sqrt(pow(end,counter)/start+sum);
+                 start+=1;
+                 end+=1;
+                 counter-=1;
+                 if(counter==0)
+                 {
+                     counter=n/2;
+                 }
+             }
+         }
+     }
+     if(n%2==1)
+     {
+         int counter=1;
+         double start=1;
+         double end=n;
+         for(int i=1;i<=n;i++)
+         {
+             if(i%2==1)
+             {
+                 sum=sqrt(pow(end,counter)/start+sum);
+                 start+=1;
+                 end+=1;
+                 counter-=1;
+                 if(counter==0)
+                 {
+                     counter=n/2;
+                 }
+             }
+              if(i%2==0)
+             {
+                 sum=sqrt(start/pow(end,2)+sum);
+                 start+=1;
+                 end+=1;
+                 counter-=1;
+                 if(counter==0)
+                 {
+                     counter=n/2;
+                 }
+             }
+         }
+
+     }
+return sum;
+}
+///end=n*2-1 start=n counter pitamo u glavni jbg
+double f1(double end,double start, int counter, int cache, int remember,int countmaxx)
+{
+    if(remember%2==0)
+    {
+        if(cache==1)
+        {
+
+            return sqrt(start/pow(end,counter));
+        }
+        else
+        {
+            if(cache%2==0)
+            {
+                if(counter>countmaxx)
+                {
+                    counter=1;
+                }
+
+                return sqrt(pow(end,counter)/start+f1(end-1,start-1,counter+1,cache-1,remember,countmaxx));
+            }
+            if(cache%2==1)
+            {
+                if(counter>countmaxx)
+                {
+                    counter=1;
+                }
+                return sqrt(start/pow(end,counter)+f1(end-1,start-1,counter+1,cache-1,remember,countmaxx));
+            }
+        }
+    }
+    if(remember%2==1)
+    {
+        if(cache==1)
+        {
+             if(counter>countmaxx)
+                {
+                    counter=1;
+                }
+            return sqrt(pow(end,counter)/start);
+        }
+        else
+        {
+            if(cache%2==1)
+            {
+                if(counter>countmaxx)
+                {
+                    counter=1;
+                }
+                return sqrt(pow(end,counter)/start+f1(end-1,start-1,counter+1,cache-1,remember,countmaxx));
+            }
+            if(cache%2==0)
+            {
+                if(counter>countmaxx)
+                {
+                    counter=1;
+                }
+                return sqrt(start/pow(end,counter)+f1(end-1,start-1,counter+1,cache-1,remember,countmaxx));
+            }
+        }
+    }
+}
+
+int main()
+{
+   int n;
+   scanf("%d",&n);
+    int countmaxx;
+    countmaxx=n/2;
+   printf("%lf\n",f1(n*2-1,n,1,n,n,countmaxx));
+   printf("%lf\n",f1_i(n));
+   return 0;
+}
