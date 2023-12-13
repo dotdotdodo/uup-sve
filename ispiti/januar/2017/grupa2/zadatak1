@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <math.h>
+
+double pattern(int n)
+{
+   double broj=1;
+   double dodaj=2;
+   double finalbr=0;
+   for(int i=1;i<=n;i++)
+   {
+       finalbr=broj*dodaj;
+       broj*=10;
+       dodaj+=2;
+   }
+   return finalbr;
+
+}
+
+int fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    } else {
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+}
+
+double f1_i(int n)
+{
+    double sum=0;
+    double gore;
+    double dole;
+    int fib=n;
+    for(int i=1;i<=n;i++)
+    {
+        sum=sqrt(fibonacci(fib)/pattern(i)+sum);
+        fib-=1;
+    }
+    return sum;
+}
+
+
+int main()
+{
+   int n;
+   scanf("%d",&n);
+   printf("%lf\n",f1_i(n));
+   return 0;
+}
