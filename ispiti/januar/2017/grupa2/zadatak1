@@ -16,7 +16,7 @@ double pattern(int n)
 
 }
 
-int fibonacci(int n) {
+double fibonacci(int n) {
     if (n <= 1) {
         return n;
     } else {
@@ -27,8 +27,6 @@ int fibonacci(int n) {
 double f1_i(int n)
 {
     double sum=0;
-    double gore;
-    double dole;
     int fib=n;
     for(int i=1;i<=n;i++)
     {
@@ -38,11 +36,25 @@ double f1_i(int n)
     return sum;
 }
 
+double f1(int start,int end,int cache)
+{
+    if(cache==1)
+    {
+        return sqrt(fibonacci(start)/pattern(end));
+    }
+    else
+    {
+        return sqrt(fibonacci(start)/pattern(end)+f1(start+1,end-1,cache-1));
+    }
+}
+
+
 
 int main()
 {
    int n;
    scanf("%d",&n);
    printf("%lf\n",f1_i(n));
+    printf("%lf\n",f1(1,n,n));
    return 0;
 }
