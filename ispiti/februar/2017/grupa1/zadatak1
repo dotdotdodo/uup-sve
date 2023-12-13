@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <math.h>
+
+double pattern(int n,int save)
+{
+    int br=n;
+    for(int i=1;i<save;i++)
+    {
+       if(br>100)
+       {
+           br=0;
+       }
+        n-=1;
+        br=br*10+n;
+    }
+    return br;
+}
+
+double f1_i(int n)
+{
+    double sum=0;
+    double counter=n;
+
+
+    for(int i=1;i<n;i++)
+    {
+        counter+=i;
+    }
+    double br=counter;
+    counter-=n-1;
+    for(int i=n-2;i>=0;i--)
+    {
+        sum=counter+pattern(n,i+1)/br;
+        br=sum;
+        printf("%lf %lf %lf\n",counter,pattern(n,i+1),sum);
+        counter-=i;
+    }
+    return sum;
+}
+
+double f1(double counter,int cache,int i,int safe)
+{
+    if(cache==1)
+    {
+        counter+=i;
+        printf("%lf\n",counter);
+        return counter;
+    }
+    else
+    {
+        counter+=i;
+        printf("%lf %lf %d\n",counter,pattern(safe,i+1),i);
+        return counter+pattern(safe,i+1)/f1(counter,cache-1,i+1,safe);
+    }
+}
+
+
+int main()
+{
+   int n;
+   scanf("%d",&n);
+   printf("%lf\n",f1_i(n));
+   printf("%lf\n",f1(n,n,0,n));
+   return 0;
+}
