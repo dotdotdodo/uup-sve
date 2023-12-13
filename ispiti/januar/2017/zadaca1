@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <math.h>
+
+double pattern(int n,int z)
+{
+   double br=n*2;
+    int oduzmi=2;
+    for(int i=1;i<z;i++)
+    {
+    br*=10;
+    oduzmi*=10;
+    br-=oduzmi;
+    }
+    return br;
+}
+
+double test(int n)
+{
+    for(int i=1;i<n;i++)
+    {
+        printf("%lf, i- %d\n",pattern(n,i),i);
+    }
+}
+
+double fibonacci(int n)
+{
+    if(n==0) return 0;
+    if (n==1) return 1;
+    else
+    {
+    int t1=0, t2=1, next=t1+t2;
+    for(int i=0;i<n;i++)
+    {
+        next=t1+t2;
+        t1=t2;
+        t2=next;
+    }
+    return t1;
+    }
+}
+
+
+
+
+double f1_i(int n)
+{
+    double sum=0;
+    int safe=n;
+    double br=fibonacci(n);
+    for(int i=n-1;i>0;i--)
+    {
+        sum=fibonacci(i)+pattern(safe,i)/br;
+        br=sum;
+    }
+
+
+   return sum;
+}
+
+
+double f1(double start,double end, double cache,int safe)
+{
+    if(cache==1)
+    {
+        return fibonacci(start);
+    }
+    else
+    {
+        return fibonacci(start)+pattern(safe,end)/f1(start+1,end+1,cache-1,safe);
+    }
+
+}
+
+int main()
+{
+   int n;
+   scanf("%d",&n);
+   printf("%lf\n",f1(1,1,n,n));
+   printf("%lf\n",f1_i(n));
+   return 0;
+}
