@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <math.h>
+
+double pattern(int save,int n)
+{
+    int br=n;
+    for(int i=1;i<save;i++)
+    {
+       if(br>100)
+       {
+           br=0;
+       }
+        n-=1;
+        br=br*10+n;
+    }
+    return br;
+}
+
+
+double f1_i(int n)
+{
+    double sum=0;
+    int save=n;
+    double counter=n;
+    int broj=n;
+    for(int i=1;i<=n;i++)
+    {
+        sum=sqrt(counter/pattern(broj,save)+sum);
+         printf("%lf %lf\n",counter,pattern(broj,save));
+        broj-=1;
+        counter+=i;
+    }
+
+
+    return sum;
+}
+///counter i i za gore, algo sa n i safe dole
+
+double f1(double counter, int i ,int n,int safe,int cache)
+{
+    if(cache==1)
+    {
+         printf("counter- %lf pattern- %lf i-%d n-%d\n",counter,pattern(n,safe),i,n);
+        return sqrt(counter/pattern(n,safe));
+    }
+    else
+    {
+        printf("counter- %lf pattern- %lf i-%d n-%d\n",counter,pattern(n,safe),i,n);
+        return sqrt(counter/pattern(n,safe)+f1(counter-i,i-1,n+1,safe,cache-1));
+    }
+}
+
+
+int main()
+{
+   int n,a;
+   scanf("%d",&n);
+   printf("%lf\n",f1_i(n));
+   int counter=0;
+   for(int i=1;i<=n;i++)
+   {
+       counter+=i;
+   }
+   printf("counter-%d\n",counter);
+   printf("%lf\n",f1(counter,n-1,1,n,n));
+   return 0;
+}
