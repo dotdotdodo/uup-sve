@@ -1,28 +1,14 @@
 #include <stdio.h>
 
-void ucitaj(int n, int m, int mat[][100]) {
-    int i, j;
-    for (i = 0; i < n; i++)
-        for (j = 0; j < m; j++)
-            scanf("%d", &mat[i][j]);
-}
-
-void ispisi(int n, int m, int mat[][100]) {
-    int i, j;
-    for (i = 0; i < n; i++, putchar('\n'))
-        for (j = 0; j < m; j++)
-            printf("%d ", mat[i][j]);
-}
-
-void sortiraj_kolone(int n, int m, int mat[][100]) {
+void sortiraj_kolone(int matrica[100][100], int N, int M) {
     int i, j, k, temp;
-    for (j = 0; j < m; j++) {
-        for (i = 0; i < n; i++){
-            for (k = i + 1; k < n; k++) {
-                if (mat[i][j] > mat[k][j]) {
-                    temp = mat[i][j];
-                    mat[i][j] = mat[k][j];
-                    mat[k][j] = temp;
+    for (i = 0; i < M; i++) {
+        for (j = 0; j < N-1; j++) {
+            for (k = 0; k < N-j-1; k++) {
+                if (matrica[k][i] > matrica[k+1][i]) {
+                    temp = matrica[k][i];
+                    matrica[k][i] = matrica[k+1][i];
+                    matrica[k+1][i] = temp;
                 }
             }
         }
@@ -30,10 +16,20 @@ void sortiraj_kolone(int n, int m, int mat[][100]) {
 }
 
 int main() {
-    int mat[100][100], n, m;
-    scanf("%d %d", &n, &m);
-    ucitaj(n, m, mat);
-    sortiraj_kolone(n, m, mat);
-    ispisi(n, m, mat);
+    int N, M, i, j;
+    int matrica[100][100];
+    scanf("%d %d", &N, &M);
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < M; j++) {
+            scanf("%d", &matrica[i][j]);
+        }
+    }
+    sortiraj_kolone(matrica, N, M);
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < M; j++) {
+            printf("%d ", matrica[i][j]);
+        }
+        printf("\n");
+    }
     return 0;
 }
