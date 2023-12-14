@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <math.h>
+
+
+double f1_i(int n)
+{
+    double sum=0;
+    double pattern;
+    int takt;
+    double br;
+    double counter=n*2+1;
+    for(int i=1;i<n-1;i++)
+    {
+        counter-=2;
+    }
+    printf("%lf\n",counter);
+    if(n%2==0)
+    {
+        pattern=n/2;
+        takt=1;
+        br=pattern;
+        printf("%lf %lf %lf %d\n",pattern,counter,br,takt);
+    }
+    else if(n%2==1)
+    {
+        pattern=(n+1)/2;
+        takt=2;
+        br=pattern;
+        printf("%lf %lf %lf %d\n",pattern,counter,br,takt);
+    }
+
+    for(int i=1;i<n;i++)
+    {
+        if(takt==2)
+        {
+            takt=0;
+            pattern-=1;
+        }
+        sum=pattern+counter/br;
+        printf("%lf %lf %lf %d\n",pattern,counter,br,takt);
+        counter+=2;
+        br=sum;
+        takt+=1;
+    }
+
+    return sum;
+}
+
+
+double f1(double counter,double pattern,double takt,double cache)
+{
+        if(cache==1)
+        {
+            if(takt==2)
+            {
+                takt=0;
+                counter+=1;
+            }
+            return counter;
+        }
+        else
+        {
+            if(takt==2)
+            {
+                takt=0;
+                counter+=1;
+            }
+            printf("%lf %lf %lf\n",counter,pattern,takt);
+            return counter+pattern/f1(counter,pattern-2,takt+1,cache-1);
+        }
+}
+
+
+int main()
+{
+   int n;
+   scanf("%d",&n);
+   printf("%lf\n",f1_i(n));
+   printf("%lf\n",f1(1,n*2+1,0,n));
+   return 0;
+}
