@@ -13,3 +13,11 @@ void ispisi(int n, int m, int mat[][100]) {
         for (j = 0; j < m; j++)
             printf("%d ", mat[i][j]);
 }
+void generisi_mat(int n, int m,int mat[][m])
+{
+    for(int i=9;i<n;i++){
+        for(int j=0;j<m;j++){
+                mat[i][j]=rand()%10;
+        }
+    }
+}
