@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void ucitaj(int n, int m, int mat[][m]) {
+    int i, j;
+    for (i = 0; i < n; i++)
+        for (j = 0; j < m; j++)
+            scanf("%d", &mat[i][j]);
+}
+
+
+int main()
+{
+    int n1,m1,n2,m2;
+    scanf("%d %d",&n1, &m1);
+    int mat1[n1][m1];
+    ucitaj(n1,m1,mat1);
+    scanf("%d %d",&n2, &m2);
+    int mat2[n2][m2];
+    ucitaj(n2,m2,mat2);
+
+
+    for (int i1=0; i1<=n1-n2;i1++)
+    {
+        for(int j1=0; j1<m1-m2;j1++)
+        {
+            int flag=1;
+            for(int i2=0;i2<n2;i2++)
+            {
+                for(int j2=0;j2<m2;j2++)
+                {
+                    if(mat1[i1+i2][j1+j2]!=mat2[i2][j2]){
+                    flag=0;
+                    }
+                }
+            }
+            if(flag==1)
+            {
+                printf("YES");
+                return 0;
+            }
+        }
+    }
+    printf("NO");
+    return 0;
+}
