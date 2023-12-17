@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void minMatrix(int n, int M[50][50]) {
+    int minRow[50], minCol[50];
+
+    // Inicijalizacija nizova minimuma
+    for (int i = 0; i < n; i++) {
+        minRow[i] = M[i][0];
+        minCol[i] = M[0][i];
+    }
+
+    // Pronalaženje minimuma za svaku vrstu i kolonu
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (M[i][j] < minRow[i]) minRow[i] = M[i][j];
+            if (M[j][i] < minCol[i]) minCol[i] = M[j][i];
+        }
+    }
+
+    // Zamena svakog elementa sa minimumom iz njegove vrste i kolone
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (minRow[i] < minCol[j]) {
+                M[i][j] = minRow[i];
+            } else {
+                M[i][j] = minCol[j];
+            }
+        }
+    }
+}
+
+int main() {
+    int n, M[50][50];
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &M[i][j]);
+        }
+    }
+
+    minMatrix(n, M);
+
+    printf("\n\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", M[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
