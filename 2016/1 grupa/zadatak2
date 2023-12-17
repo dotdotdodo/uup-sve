@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <math.h>
+
+ void ispisi(int n, int m, int mat[][m]) {
+    int i, j;
+    for (i = 0; i < n; i++, putchar('\n'))
+        for (j = 0; j < m; j++)
+            printf("%d ", mat[i][j]);
+}
+
+
+int main()
+{
+        int br,n=0;
+        int i,j;
+        scanf("%d",&br);
+        int safe=br;
+        while(br)
+        {
+            n++;
+            br/=10;
+        }
+        int mat[n][n];
+        br=safe;
+        for(i=n-1;i>=0;i--)
+        {
+            mat[0][i]=br%10;
+            br/=10;
+        }
+        int counter=1;
+        for(i=0;i<=n;i++)
+        {
+            for(j=0;j<=n;j++)
+            {
+
+                mat[i+1][j]=mat[i][j]-counter;
+                if(mat[i][j]-counter==-1)
+                {
+                    mat[i+1][j]=9;
+                }
+                if(mat[i][j]-counter==-2)
+                {
+                    mat[i+1][j]=8;
+                }
+
+            }
+            counter+=1;
+             if(counter>2)
+                {
+                    counter=1;
+                }
+        }
+        ispisi(n,n,mat);
+}
