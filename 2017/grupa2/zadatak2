@@ -1,0 +1,151 @@
+#include <math.h>
+#include <stdio.h>
+
+
+void ucitaj(int n, int m, int mat[][m]) {
+    int i, j;
+    for (i = 0; i < n; i++)
+        for (j = 0; j < m; j++)
+            scanf("%d", &mat[i][j]);
+}
+
+void ispisi(int n, int m, int mat[][m]) {
+    int i, j;
+    for (i = 0; i < n; i++, putchar('\n'))
+        for (j = 0; j < m; j++)
+            printf("%d ", mat[i][j]);
+}
+
+void generisi_mat(int n, int m,int mat[][m])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+                mat[i][j]=rand()%10;
+        }
+    }
+}
+
+
+
+int brCifara(int n)
+{
+    int br=0;
+    while(n)
+    {
+        br++;
+        n/=10;
+    }
+    return br;
+}
+
+void sredina(int n,int br,int mat[][n])
+{
+    int br1=n/2;
+    if(n%2==1)
+    {
+        for(int i=n-1;i>=0;i--)
+        {
+            mat[br1][i]=br%10;
+            br/=10;
+        }
+    }
+    if(n%2==0)
+    {
+        int br2=(n/2)-1;
+        for(int i=n-1;i>=0;i--)
+        {
+            mat[br1][i]=br%10;
+            mat[br2][i]=br%10;
+            br/=10;
+        }
+    }
+}
+
+void dole(int n, int mat[][n])
+{
+    int br1=(n/2)+1;
+   if(n%2==1)
+   {
+       int counter=0;
+       for(int i=br1;i<n;i++)
+       {
+           for(int j=0;j<n;j++)
+           {
+               mat[i][j]=mat[i-1][j]-counter;
+               if (mat[i-1][j]-counter==-1)
+               {
+                   mat[i][j]=9;
+               }
+           }
+           if(counter==0)
+           {
+               counter=1;
+           }
+           else counter=0;
+       }
+   }
+   if(n%2==0)
+   {
+       int counter=1;
+       for(int i=br1;i<n;i++)
+       {
+           for(int j=0;j<n;j++)
+           {
+               mat[i][j]=mat[i-1][j]-counter;
+               if (mat[i-1][j]-counter==-1)
+               {
+                   mat[i][j]=9;
+               }
+           }
+           if(counter==0)
+           {
+               counter=1;
+           }
+           else counter=0;
+       }
+   }
+}
+
+
+void gore(int n,int mat[][n])
+{
+    int oduzmi;
+    int br1=(n/2);
+    if(n%2==1)
+    {
+    oduzmi=1;
+    }
+    else oduzmi=2;
+    int counter=1;
+    for(int i=br1-oduzmi;i>=0;i--)
+    {
+        for(int j=0;j<n;j++)
+        {
+            mat[i][j]=(mat[i+1][j]+counter)%10;
+        }
+        if(counter==1)
+        {
+            counter=0;
+        }
+        else counter=1;
+    }
+}
+
+
+int main()
+{
+  int n;
+  scanf("%d",&n);
+    int br=brCifara(n);
+    int mat[br][br];
+
+    generisi_mat(br,br,mat);
+
+    sredina(br,n,mat);
+    gore(br,mat);
+    dole(br,mat);
+    ispisi(br,br,mat);
+
+
+  return 0;
+}
