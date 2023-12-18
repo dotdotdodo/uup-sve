@@ -1,0 +1,67 @@
+#include <math.h>
+#include <stdio.h>
+
+void ucitaj(int n, int m, int mat[][m]) {
+  int i, j;
+  for (i = 0; i < n; i++)
+    for (j = 0; j < m; j++) scanf("%d", &mat[i][j]);
+}
+
+int najveciCheck(int n, int m, int mat[][n]) {
+  int max = 0;
+  for (int i = 0; i < n; i++) {
+    if (mat[m][i] % 2 == 1 && mat[m][i] > max) {
+      max = mat[m][i];
+    }
+  }
+  return max;
+}
+int najveciCounter(int n, int m, int mat[][n]) {
+  int counter = 0;
+  int najveci = najveciCheck(n, m, mat);
+  for (int i = 0; i < n; i++) {
+    if (mat[m][i] == najveci) {
+      counter++;
+    }
+  }
+  return counter;
+}
+int KolonaCheck(int n, int m, int mat[][n]) {
+  int max = 0;
+  for (int i = 0; i < n; i++) {
+    if (mat[i][m] % 2 == 0 && mat[i][m] > max) {
+      max = mat[i][m];
+    }
+  }
+  return max;
+}
+
+int KolonaCounter(int n, int m, int mat[][n]) {
+  int counter = 0;
+  int najveci = KolonaCheck(n, m, mat);
+  for (int i = 0; i < n; i++) {
+    if (mat[i][m] == najveci) {
+      counter++;
+    }
+  }
+  return counter;
+}
+
+int main() {
+  int n;
+  scanf("%d", &n);
+  int mat[n][n];
+  ucitaj(n, n, mat);
+  for (int i = 0; i < n; i++) {
+    if (najveciCounter(n, i, mat) == 0) continue;
+    printf("red %d: %d %d\n", i + 1, najveciCheck(n, i, mat),
+           najveciCounter(n, i, mat));
+  }
+  for (int i = 0; i < n; i++) {
+    if (KolonaCounter(n, i, mat) == 0) continue;
+    printf("kolona %d: %d %d\n", i + 1, KolonaCheck(n, i, mat),
+           KolonaCounter(n, i, mat));
+  }
+
+  return 0;
+}
