@@ -1,0 +1,163 @@
+#include <math.h>
+#include <stdio.h>
+
+int
+main()
+{
+  int n;
+  scanf("%d", &n);
+  int BrCifara;
+  int safe = n;
+  while (n) {
+    BrCifara++;
+    n /= 10;
+  }
+  n = safe;
+  int remember = BrCifara;
+  /// 2 deo
+
+  if (remember % 2 == 1) {
+    int counter = 0;
+    int loopControl = BrCifara;
+
+    for (int i = 0; i < loopControl; i++) {
+      int cifra1 = n / (int)pow(10, BrCifara - 1) % 10;
+      n = n % (int)pow(10, BrCifara - 1);
+      int cifra2 = cifra1 - BrCifara / 2;
+      BrCifara -= 1;
+      if (cifra1 == 10) {
+        cifra1 = 0;
+      }
+      if (cifra2 == -1) {
+        cifra2 = 9;
+      } else if (cifra2 == -2) {
+        cifra2 = 8;
+      } else if (cifra2 == 10) {
+        cifra2 = 0;
+      }
+      for (int j = 0; j < loopControl; j++) {
+        if (i % 2 == 0) {
+          if (i + j == n - 1) {
+
+            printf("%d ", cifra1);
+          } else {
+            if (j % 2 == 0) {
+              if (cifra1 == 10) {
+                cifra1 = 0;
+              }
+              if (cifra2 == -1) {
+                cifra2 = 9;
+              } else if (cifra2 == -2) {
+                cifra2 = 8;
+              } else if (cifra2 == 10) {
+                cifra2 = 0;
+              }
+
+              printf("%d ", cifra2);
+            }
+            if (j % 2 == 1) {
+              printf("%d ", cifra2);
+              cifra2 += 1;
+            }
+          }
+        }
+        if (i % 2 == 1) {
+          if (i + j == n - 1) {
+            printf("%d ", cifra1);
+          } else {
+            if (j % 2 == 1) {
+              if (cifra1 == 10) {
+                cifra1 = 0;
+              }
+              if (cifra2 == -1) {
+                cifra2 = 9;
+              } else if (cifra2 == -2) {
+                cifra2 = 8;
+              } else if (cifra2 == 10) {
+                cifra2 = 0;
+              }
+              printf("%d ", cifra2);
+            }
+            if (j % 2 == 0) {
+              printf("%d ", cifra2);
+              cifra2 += 1;
+            }
+          }
+        }
+      }
+      printf("\n");
+    }
+  }
+  if (remember % 2 == 0) {
+    int counter = 0;
+    int loopControl = BrCifara;
+
+    for (int i = 0; i < loopControl; i++) {
+      int cifra1 = n / (int)pow(10, BrCifara - 1) % 10;
+      n = n % (int)pow(10, BrCifara - 1);
+      int cifra2 = cifra1 - BrCifara / 2;
+      BrCifara -= 1;
+      if (cifra1 == 10) {
+        cifra1 = 0;
+      }
+      if (cifra2 == -1) {
+        cifra2 = 9;
+      } else if (cifra2 == -2) {
+        cifra2 = 8;
+      } else if (cifra2 == 10) {
+        cifra2 = 0;
+      }
+      for (int j = 0; j < loopControl; j++) {
+
+        if (i % 2 == 0) {
+          if (i + j == n - 1) {
+            printf("%d ", cifra1);
+          } else {
+            if (j % 2 == 0) {
+              printf("%d ", cifra2);
+              cifra2 += 1;
+            }
+            if (j % 2 == 1) {
+              if (cifra1 == 10) {
+                cifra1 = 0;
+              }
+              if (cifra2 == -1) {
+                cifra2 = 9;
+              } else if (cifra2 == -2) {
+                cifra2 = 8;
+              } else if (cifra2 == 10) {
+                cifra2 = 0;
+              }
+              printf("%d ", cifra2);
+            }
+          }
+        }
+        if (i % 2 == 1) {
+          if (i + j == n - 1) {
+            printf("%d ", cifra1);
+          } else {
+            if (j % 2 == 1) {
+              printf("%d ", cifra2);
+              cifra2 += 1;
+            }
+            if (j % 2 == 0) {
+              if (cifra1 == 10) {
+                cifra1 = 0;
+              }
+              if (cifra2 == -1) {
+                cifra2 = 9;
+              } else if (cifra2 == -2) {
+                cifra2 = 8;
+              } else if (cifra2 == 10) {
+                cifra2 = 0;
+              }
+              printf("%d ", cifra2);
+            }
+          }
+        }
+      }
+      printf("\n");
+    }
+  }
+  return 0;
+}
