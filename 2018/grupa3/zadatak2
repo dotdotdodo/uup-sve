@@ -1,0 +1,99 @@
+#include <math.h>
+#include <stdio.h>
+
+void ispisi(int n, int m, int mat[][m]) {
+    int i, j;
+    for (i = 0; i < n; i++, putchar('\n'))
+        for (j = 0; j < m; j++)
+            printf("%4d", mat[i][j]);
+}
+
+void ucitaj(int n, int m, int mat[][m]) {
+    int i, j;
+    for (i = 0; i < n; i++)
+        for (j = 0; j < m; j++)
+            scanf("%d", &mat[i][j]);
+}
+
+void generisi_mat(int n, int m,int mat[][m])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+                mat[i][j]=rand()%10;
+        }
+    }
+}
+int max4(int a, int b, int c, int d) {
+    int max = a;
+
+    if (b > max)
+        max = b;
+    if (c > max)
+        max = c;
+    if (d > max)
+        max = d;
+
+    return max;
+}
+
+int max3(int a, int b, int c) {
+    int max = a;
+
+    if (b > max)
+        max = b;
+    if (c > max)
+        max = c;
+
+    return max;
+}
+
+
+int
+fixit(int n, int mat[][n], int nova[][n])
+{
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      if (i == 0) {
+        if (j == 0) {
+          nova[i][j] = max3(mat[i][j + 1], mat[i + 1][j], mat[i + 1][j + 1]) + mat[i][j];
+        } else if (j == n - 1) {
+          nova[i][j] = max3(mat[i][j - 1], mat[i + 1][j], mat[i + 1][j - 1]) + mat[i][j];
+        } else
+          nova[i][j] = max3(mat[i][j - 1], mat[i + 1][j], mat[i][j + 1]) + mat[i][j];
+      } else if (i == n - 1) {
+        if (j == 0) {
+          nova[i][j] = max3(mat[i - 1][j], mat[i][j + 1], mat[i - 1][j + 1]) + mat[i][j];
+        } else if (j == n - 1) {
+          nova[i][j] = max3(mat[i][j - 1], mat[i - 1][j - 1], mat[i - 1][j]) + mat[i][j];
+        } else
+          nova[i][j] = max3(mat[i][j - 1], mat[i - 1][j], mat[i][j + 1]) + mat[i][j];
+      } else {
+        if (j == 0) {
+          nova[i][j] = max3(mat[i - 1][j], mat[i][j + 1], mat[i - 1][j]) + mat[i][j];
+        } else if (j == n - 1) {
+          nova[i][j] = max3(mat[i - 1][j], mat[i][j - 1], mat[i + 1][j]) + mat[i][j];
+        } else {
+          nova[i][j] =
+            max4(mat[i - 1][j], mat[i][j + 1], mat[i - 1][j + 1], mat[i][j - 1]) + mat[i][j];
+        }
+      }
+    }
+  }
+  return nova[n][n];
+}
+
+
+int main()
+{
+
+  int n;
+  scanf("%d", &n);
+  int mat[n][n];
+  int matr[n][n];
+  ucitaj(n,n,mat);
+  fixit(n, mat, matr);
+  ispisi(n, n, matr);
+
+  return 0;
+
+}
