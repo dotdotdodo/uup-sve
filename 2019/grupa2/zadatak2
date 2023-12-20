@@ -1,0 +1,54 @@
+#define SIZE 100
+#include <stdio.h>
+
+void ispisi(int n, int m, int mat[][m]) {
+  int i, j;
+  for (i = 0; i < n; i++, putchar('\n'))
+    for (j = 0; j < m; j++) printf("%2d", mat[i][j]);
+}
+
+void generisi_mat(int n, int m, int mat[][m]) {
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      mat[i][j] = -1;
+    }
+  }
+}
+
+int main() {
+
+   int n,m;
+   scanf("%d %d",&n,&m);
+   int mat[m][m];
+   generisi_mat(m,m,mat);
+
+   int smer_i[]={0,1,0,-1};
+   int smer_j[]={-1,0,1,0};
+   int count=n;
+   int timer=1;
+   int smer=0;
+   int i=0;
+   int j=m-1;
+   while(timer<=m*m)
+   {
+       int j_after=j+smer_j[smer];
+       int i_after=i+smer_i[smer];
+       if(i_after>=0 && j_after>=0 && i_after<m && j_after<m && mat[i_after][j_after]==-1)
+       {
+           mat[i][j]=count;
+           i=i_after;
+           j=j_after;
+       }
+       else
+       {
+           count=(count+2)%10;
+           mat[i][j]=count;
+           smer=(smer+1)%4;
+           j=j+smer_j[smer];
+           i=i+smer_i[smer];
+       }
+       timer+=1;
+   }
+    ispisi(m,m,mat);
+  return 0;
+}
