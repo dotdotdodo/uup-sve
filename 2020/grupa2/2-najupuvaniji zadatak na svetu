@@ -1,0 +1,74 @@
+#define SIZE 200
+#include <stdio.h>
+
+void siftuj(int niz[], int k, int n) {
+    while (k) {
+        for (int i = n-1; i > 0; i--) {
+            int temp = niz[i];
+            niz[i] = niz[i-1];
+            niz[i-1] = temp;
+        }
+        k--;
+    }
+}
+
+
+int main() {
+
+    int n, k, mat[SIZE][SIZE], niz[SIZE];
+    scanf("%d %d", &n, &k);
+    int i,j;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++)
+            scanf("%d", &mat[i][j]);
+    }
+
+    int brojac = 0;
+    int count=0;
+    while (brojac <= n/2 - 1) {
+       int dim=0;
+       for (i = count; i <n-count-1 ; i++) {
+        for (j = count; j <n-count; j++){
+                if(i==count || j==n-count-1)
+                {
+                    niz[dim++]=mat[i][j];
+                }
+            }
+       }
+       for(i=n-count-1;i>count;i--){
+        for(j=n-count-1;j>=count;j--){
+            if(i==n-1-count || j==count)
+            {
+                niz[dim++]=mat[i][j];
+            }
+        }
+       }
+       siftuj(niz,k,dim);
+       dim=0;
+       for (i = count; i <n-count-1 ; i++) {
+        for (j = count; j <n-count; j++){
+                if(i==count || j==n-count-1)
+                {
+                    mat[i][j]=niz[dim++];
+                }
+            }
+       }
+       for(i=n-count-1;i>count;i--){
+        for(j=n-count-1;j>=count;j--){
+            if(i==n-1-count || j==count)
+            {
+                mat[i][j]=niz[dim++];
+            }
+        }
+       }
+       count++;
+        brojac++;
+    }
+    printf("\n\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++)
+            printf("%d ", mat[i][j]);
+        printf("\n");
+    }
+    return 0;
+}
