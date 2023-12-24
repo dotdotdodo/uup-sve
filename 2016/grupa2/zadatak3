@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+
+#define SIZE 100
+
+int main()
+{
+    char str[SIZE];
+    int n;
+    scanf("%d",&n);
+    while(getchar()!='\n');
+    fgets(str,sizeof(str),stdin);
+    int z=0;
+    int counter=0;
+    int start=0;
+    int end;
+    str[strlen(str)-1]=' ';
+    for(int i=0;i<strlen(str);i++)
+    {
+        if(str[i]!=' ')
+            counter++;
+        else
+        {
+            if (counter>n)
+            {
+                end=i-1;
+                for(int j=start;j<=end;j++)
+                {
+                    str[z++]=str[j];
+                }
+                str[z++]=' ';
+            }
+            counter=0;
+            start=i+1;
+        }
+    }
+    str[z]='\0';
+    puts(str);
+    return 0;
+}
