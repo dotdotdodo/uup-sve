@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define size 10
+/**
+5 4
+1 2 2 2
+6 3 1 1
+5 8 1 1
+6 3 3 1
+7 2 1 2
+*/
+void printMatrix(int n, int m, int mat[n][m])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            printf("%2d",mat[i][j]);
+        }
+        putchar('\n');
+    }
+}
+
+int palindromCheck(int n, int m, int x, int mat[n][m])
+{
+    int i = 0;
+    int j = n-1;
+
+    while (i < j) {
+        if (mat[i][x] != mat[j][x]) {
+            return 0; // Not a palindrome
+        }
+        i++;
+        j--;
+    }
+    return 1; // Palindrome
+}
+
+void rotate(int n, int m, int x,int k, int mat[n][m])
+{
+    for(int i=0;i<k;i++)
+    {
+        int cache=mat[n-1][x];
+        for(int j=n-1;j>=0;j--)
+        {
+            mat[j][x]=mat[j-1][x];
+        }
+        mat[0][x]=cache;
+    }
+}
+
+int maxi(int n, int m,int x, int mat[n][m])
+{
+    int max=0;
+    for(int i=0;i<n;i++)
+    {
+        if(mat[i][x]>max) max=mat[i][x];
+    }
+    return max;
+}
+
+void generateMatrix(int n, int m, int mat[n][m])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            scanf("%d",&mat[i][j]);
+        }
+    }
+}
+int main() {
+    int n, m;
+    scanf("%d %d", &n, &m);
+    int mat[n][m];
+    int max=0;
+    generateMatrix(n,m,mat);
+    for(int i=0;i<m;i++)
+    {
+        if(palindromCheck(n,m,i,mat)==0)
+        {
+            max=maxi(n,m,i,mat);
+            rotate(n,m,i,max,mat);
+        }
+    }
+    printMatrix(n,m,mat);
+    return 0;
+}
