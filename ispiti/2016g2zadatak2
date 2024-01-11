@@ -1,0 +1,73 @@
+#include <stdio.h>
+
+#define SIZE 20
+
+/**
+4
+2 5 8 1
+1 4 5 9
+8 5 4 5
+1 8 5 2
+*/
+
+
+void spawnMatrica(int n, int mat[n][n])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d",&mat[i][j]);
+        }
+    }
+}
+
+int istiChecker(int n, int x, int y, int mat[n][n]) {
+
+    int col[n];
+    int row[n];
+    for(int i=0;i<n;i++){
+        col[i]=mat[i][x];
+        row[i]=mat[y][i];
+    }
+
+    for(int i=0;i<n;i++){
+        if(row[i]!=col[i]) return 0;
+    }
+    return 1;
+}
+int obrniChecker(int n, int x, int y, int mat[n][n]) {
+
+    int col[n];
+    int row[n];
+    int obrnuto=0;
+    for(int i=n-1;i>=0;i--){
+        row[obrnuto++]=mat[y][i];
+    }
+    for(int i=0;i<n;i++)
+    {
+        col[i]=mat[i][x];
+    }
+    for(int i=0;i<n;i++){
+        if(row[i]!=col[i]) return 0;
+    }
+    return 1;
+}
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    int mat[n][n];
+    spawnMatrica(n,mat);
+   for(int i=0;i<n;i++){
+    for(int j=0;j<n;j++){
+        if(istiChecker(n,i,j,mat))
+        printf("vrsta %d - kolona %d isti\n",i,j);
+        if(obrniChecker(n,i,j,mat))
+            printf("vrsta %d - kolona %d obrnuto\n",j,i);
+    }
+   }
+
+return 0;
+
+
+}
