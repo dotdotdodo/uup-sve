@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <string.h>
+#define size 100
+
+/**
+prvi string: obla!ci mesec su!nce
+Ispis: ci!obla nce!su
+*/
+
+int main()
+{
+    char str[size];
+    fgets(str,size,stdin);
+    str[strlen(str)-1]=' ';
+    char prezivi[size]="";
+    char* token=strtok(str," ");
+    while(token)
+    {
+        if(strchr(token,'!')==NULL)
+        {
+            token=strtok(NULL," ");
+            continue;
+        }
+        else
+        {
+            char prvi[11]="";
+            int index1=0;
+            int index2=0;
+            char drugi[11]="";
+            int flag=0;
+            for(int i=0;i<strlen(token);i++)
+            {
+                if(token[i]=='!') {flag=1; continue; }
+                if(flag==0)
+                {
+                    prvi[index1++]=token[i];
+                }
+                else drugi[index2++]=token[i];
+            }
+            char dlc[size]="";
+            strcat(dlc,drugi);
+            strcat(dlc,"!");
+            strcat(dlc,prvi);
+            strcat(prezivi,dlc);
+            strcat(prezivi," ");
+        }
+        token=strtok(NULL," ");
+    }
+    prezivi[strlen(prezivi)-1]='\0';
+    puts(prezivi);
+
+    return 0;
+}
