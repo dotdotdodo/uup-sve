@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define size 100
+
+/**
+4
+3 1 9 1
+4 3 5 4
+2 3 3 5
+7 4 1 7
+3453
+*/
+
+void matricaSpawner(int n, int mat[n][n])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d",&mat[i][j]);
+        }
+    }
+}
+
+int iseci(int n)
+{
+    int backup=n;
+    int br=0;
+    while(backup){
+        br++;
+        backup/=10;
+    }
+    int obrezati=1;
+    br--;
+    while(br)
+    {
+        obrezati*=10;
+        br--;
+    }
+    int sec=n/obrezati;
+    return sec;
+}
+
+int obrezaj(int n)
+{
+    int backup=n;
+    int br=0;
+    while(backup){
+        br++;
+        backup/=10;
+    }
+    int obrezati=1;
+    br--;
+    while(br)
+    {
+        obrezati*=10;
+        br--;
+    }
+    return n%obrezati;
+}
+int brCifara(int n)
+{
+    int br=0;
+    while(n)
+    {
+        n/=10;
+        br++;
+    }
+    return br;
+}
+
+int prolaz(int n, int mat[n][n], int br)
+{
+    int puta=0;
+    int cache=br;
+    int digit=iseci(br);
+    printf("%d \n",digit);
+    for(int i=0;i<n;i++){
+        for(int j=n-1;j>=0;j--){
+            if(mat[i][j]==digit)
+            {
+                printf("ADRESS %d %d\n",i,j);
+                br=obrezaj(br);
+                if(br==0)
+                {
+                    puta++;
+                    br=cache;
+                    digit=iseci(br);
+                    if(mat[i][j]==digit)
+                    {
+                    printf("ADRESS %d %d bonus\n",i,j);
+                    br=obrezaj(br);
+                    digit=iseci(br);
+                    }
+                }
+                else digit=iseci(br);
+            }
+        }
+    }
+    return puta;
+}
+
+
+int main()
+{
+    int n;
+    int br;
+    scanf("%d",&n);
+    int mat[n][n];
+    matricaSpawner(n,mat);
+    scanf("%d",&br);
+    printf("%d ",prolaz(n,mat,br));
+    return 0;
+}
