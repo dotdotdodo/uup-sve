@@ -1,0 +1,94 @@
+1. (12p) Napisati program koji učitava ceo broj n i matricu koja sadrži cifre od 0 do 9 i proverava da li
+postoje vrsta ili kolona koje sadrže sve cifre broja n u bilo kom redosledu sa tačnim brojem
+pojavljivanja cifara. Ispisati indekse svih vrsta i kolona za koje ovo važi (indeksi počinju od 0).
+Primer:
+1 4 9 1 n = 447
+4 7 1 4
+2 3 4 2
+7 4 1 4
+Ispis:
+vrste 1 3
+kolona 1
+
+
+#include <stdio.h>
+#include <string.h>
+#define size 100
+
+/**
+4
+1 4 9 1
+4 7 1 4
+2 3 4 2
+7 4 1 4
+447
+
+Ispis:
+vrste 1 3
+kolona 1
+*/
+
+void matricaSpawner(int n, int mat[n][n])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d",&mat[i][j]);
+        }
+    }
+}
+
+int NUMBERSMASON(int broj, int digit)
+{
+    int izbaciga=digit;
+    int flag=0;
+    int novi=0;
+    int puta=1;
+    while(broj)
+    {
+        int cycle=broj%10;
+        if(cycle!=izbaciga || flag==1)
+        {
+              novi=novi+puta*cycle;
+              puta*=10;
+        }
+    else flag=1;
+    broj/=10;
+    }
+    return novi;
+}
+
+int main()
+{
+    int n;
+    int br;
+    scanf("%d",&n);
+    int mat[n][n];
+    matricaSpawner(n,mat);
+    scanf("%d",&br);
+    int reset=br;
+    printf("vrste ");
+    for(int i=0;i<n;i++){
+            br=reset;
+        for(int j=0;j<n;j++){
+            br=NUMBERSMASON(br,mat[i][j]);
+            if(br==0)
+            {
+                printf("%d ",i);
+            }
+        }
+    }
+    printf("\n");
+    printf("kolona ");
+     for(int j=0;j<n;j++){
+            br=reset;
+        for(int i=0;i<n;i++){
+            br=NUMBERSMASON(br,mat[i][j]);
+            if(br==0)
+            {
+                printf("%d ",j);
+            }
+        }
+    }
+ return 0;
+
+}
