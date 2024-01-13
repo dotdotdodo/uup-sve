@@ -1,0 +1,93 @@
+2. (13) Napisati program koji učitava jedan duži string koji se sastoji od reči razdvojenih spejsom i
+jedan kradi string koji ne sadrži spejs. Program treba da iz dužeg stringa izbaci sve reči koje počinju ili
+se završavaju kradim stringom. Pri tome zanemariti veličinu slova. Rezultujudi string ispisati na
+sistemski izlaz.
+Primer:
+prvi string: Danas pada sneg u Beogradu
+drugi string: da
+Ispis: sneg u Beogradu
+
+#include <stdio.h>
+#include <string.h>
+#define size 100
+
+/**
+Danas pada sneg u Beogradu
+da
+Ispis: sneg u Beogradu
+*/
+
+void toLower(char* str)
+{
+    for(int i=0;i<strlen(str);i++)
+    {
+        if(str[i]>='A' && str[i]<='Z')
+        {
+            str[i]=str[i]+32;
+        }
+    }
+}
+
+void reverse(char* str)
+{
+    int first=0;
+    int last=strlen(str)-1;
+    while(first<last)
+    {
+        char pom=str[first];
+        str[first]=str[last];
+        str[last]=pom;
+        first++;
+        last--;
+    }
+}
+
+int main()
+{
+    char str[size];
+    fgets(str,size,stdin);
+    str[strlen(str)-1]=' ';
+    toLower(str);
+    char drugi[10];
+    fgets(drugi,sizeof(drugi),stdin);
+    drugi[strlen(drugi)-1]='\0';
+    char* token=strtok(str," ");
+    int k=0;
+    char checker[size];
+    char checker2[size];
+    char rev[size];
+    strcpy(rev,drugi);
+    reverse(rev);
+    while(token)
+    {
+        for(int i=0;i<strlen(drugi);i++)
+        {
+            checker[i]=token[i];
+        }
+        strcpy(checker2, token); 
+        reverse(checker2); 
+        if(strstr(checker,drugi))
+        {
+            token=strtok(NULL," ");
+            continue;
+
+        }
+        if(strstr(checker2,rev))
+        {
+            token=strtok(NULL," ");
+            continue;
+        }
+        else{
+            for(int i=0;i<strlen(token);i++)
+        {
+            str[k++]=token[i];
+        }
+                str[k++]=' ';
+                token=strtok(NULL," ");
+        }
+
+    }
+        str[k]='\0';
+        puts(str);
+
+}
