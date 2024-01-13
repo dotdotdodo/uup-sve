@@ -1,0 +1,72 @@
+2. (13) Napisati program koji učitava duži string koji se sastoji od reči razdvojenih spejsom i jedan
+kradi string koji ne sadrži spejs. Program treba da iz dužeg stringa izbaci sve reči koje sadrže bar dva
+odvojena pojavljivanja kradeg stringa. Pri tome zanemariti veličinu slova. Rezultujudi string ispisati na
+sistemski izlaz.
+Primer:
+prvi string: Jaja pojavljivanja boja jabuka
+drugi string: ja
+Ispis: boja jabuka
+
+
+#include <stdio.h>
+#include <string.h>
+#define size 100
+
+/**
+Jaja pojavljivanja boja jabuka
+ja
+ boja jabuka
+*/
+
+void toLower(char *str)
+{
+    for(int i=0;i<strlen(str);i++){
+        if(str[i]>='A' && str[i]<='Z')
+        {
+            str[i]=str[i]+32;
+        }
+    }
+}
+
+int putaChecker(char* str, char* drugi)
+{
+    int counter=0;
+    char* pok=str;
+    while((pok=strstr(pok,drugi))!=NULL)
+    {
+        pok++;
+        counter++;
+    }
+    if(counter==2) return 0;
+    else return 1;
+}
+
+int main()
+{
+    char str[size];
+    fgets(str,size,stdin);
+    str[strlen(str)-1]='\0';
+    char drugi[7];
+    fgets(drugi,sizeof(drugi),stdin);
+    drugi[strlen(drugi)-1]='\0';
+    toLower(str);
+    int k=0;
+    char* token=strtok(str," ");
+    while(token)
+    {
+        if(putaChecker(token,drugi))
+        {
+            for(int i=0;i<strlen(token);i++)
+            {
+                str[k++]=token[i];
+            }
+            str[k++]=' ';
+        }
+        token=strtok(NULL," ");
+    }
+    str[k]='\0';
+    puts(str);
+
+
+    return 0;
+}
