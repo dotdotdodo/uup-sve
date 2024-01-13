@@ -1,0 +1,97 @@
+1. (12p) Napisati program koji učitava ceo broj n i matricu koja sadrži cifre od 0 do 9 i proverava da li
+glavna ili sporedna dijagonala sadrže sve cifre broja n u bilo kom redosledu i sa tačnim brojem
+pojavljivanja cifara. Ispisati nazive dijagonala (glavna, sporedna) za koje ovo važi.
+Primer:
+1 1 9 1 n = 477
+2 7 4 4
+2 3 4 2
+7 4 1 7
+Ispis:
+glavna
+
+
+#include <stdio.h>
+#include <string.h>
+#define size 100
+
+/**
+4
+1 1 9 1
+2 7 4 4
+2 3 4 2
+7 4 1 7
+477
+*/
+
+void spawnMatrix(int n, int mat[n][n])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++)
+        {
+            scanf("%d",&mat[i][j]);
+        }
+    }
+}
+
+int searchForDigit(int cifra, int br)
+{
+   int puta=1;
+   int novi=0;
+   int digit4remove=cifra;
+   int flag=0;
+   while(br)
+   {
+       int digit=br%10;
+       if(digit!=digit4remove || flag==1)
+       {
+           novi=novi+digit*puta;
+           puta*=10;
+       }
+       else
+       {
+       flag=1;
+       }
+    br/=10;
+   }
+    return novi;
+}
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    int mat[n][n];
+    spawnMatrix(n,mat);
+    int digit;
+    scanf("%d",&digit);
+    int save=digit;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(i==j)
+            {
+                digit=searchForDigit(mat[i][j],digit);
+                printf("%d ",digit);
+                if(digit==0)
+                {
+                    printf("glavna\n");
+                }
+            }
+        }
+    }
+    digit=save;
+for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(i+j==n-1)
+            {
+                digit=searchForDigit(mat[i][j],digit);
+                printf("%d ",digit);
+                if(digit==0)
+                {
+                    printf("sporedna\n");
+                }
+            }
+        }
+    }
+
+return 0;
+}
