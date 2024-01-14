@@ -1,0 +1,123 @@
+1. (12p) Napisati program koji učitava dve kvadratne matrice celih brojeva, matrice su istih dimenzija
+i proverava da li postoje vrste i kolone u ovim matricama koje sadrže iste elemente u proizvoljnom
+redosledu ako se zanemari broj pojavljivanja elemanata (porede se kolone sa kolonama i vrste sa
+vrstama). Program treba da ispiše sve parove rednih brojeva vrsta i kolona sa istim elementima.
+Primer:
+1. matrica 2. matrica
+1 1 9 7 1 9 7 9
+1 5 9 1 7 9 7 1
+1 9 7 9 5 1 8 8
+1 15 6 9 5 7 8 6
+Ispis:
+vrste 0 0
+vrste 0 1
+vrste 2 0
+vrste 2 1
+kolone 3 1
+
+#include <stdio.h>
+#include <stdlib.h>
+/**
+4
+1 1 9 7
+1 5 9 1
+1 9 7 9
+1 15 6 9
+1 9 7 9
+7 9 7 1
+5 1 8 8
+5 7 8 6
+*/
+
+
+
+
+void matrixSpawner(int n, int mat[n][n])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d",&mat[i][j]);
+        }
+    }
+}
+
+int kickTheCifra(int br, int cifra)
+{
+    int puta=1;
+    int novi=0;
+    while(br)
+    {
+        int digit=br%10;
+        if(digit!=cifra)
+        {
+            novi=novi+puta*digit;
+            puta*=10;
+        }
+        br/=10;
+    }
+    return novi;
+}
+
+
+
+int main()
+{
+
+    int n;
+    scanf("%d",&n);
+    int mat[n][n];
+    matrixSpawner(n,mat);
+    int druga[n][n];
+    matrixSpawner(n,druga);
+
+    int br=0;
+    int i=0;
+    int puta=1;
+    while(i<n)
+    {
+        br=0;
+        for(int j=0;j<n;j++){
+            br=br+puta*mat[i][j];
+            puta*=10;
+        }
+        int reset=br;
+        for(int k=0;k<n;k++){
+                br=reset;
+            for(int j=0;j<n;j++){
+                br=kickTheCifra(br,druga[k][j]);
+                if(br==0)
+                {
+                    printf("vrste %d %d\n",i,k);
+                    break;
+                }
+            }
+        }
+        puta=1;
+        i++;
+    }
+    i=0;
+while(i<n)
+    {
+        br=0;
+        for(int j=0;j<n;j++){
+            br=br+puta*mat[j][i];
+            puta*=10;
+        }
+        int reset=br;
+        for(int k=0;k<n;k++){
+                br=reset;
+            for(int j=0;j<n;j++){
+                    if(br==1111)break;
+                br=kickTheCifra(br,druga[j][k]);
+                if(br==0)
+                {
+                    printf("kolone %d %d\n",j,k);
+                    break;
+                }
+            }
+        }
+        puta=1;
+        i++;
+    }
+
+}
