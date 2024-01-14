@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+#define SIZE 100
+
+/**
+Unos: [a,b,c] [34,up,uup,34] [1,2] [1,2,1,4]
+[a,b,c][1,2]
+*/
+
+
+int main()
+{
+    char str[SIZE];
+    fgets(str, SIZE, stdin);
+    str[strlen(str) - 1] = ' ';
+    char novi[SIZE]="";
+    char* token=strtok(str," ");
+    while(token)
+    {
+        int flag=1;
+       for(int i=0;i<strlen(token);i++){
+        for(int j=i+1;j<strlen(token);j++){
+            if(token[i]==token[j] && token[j]!=',')
+            {
+                flag=0;
+            }
+        }
+       }
+       if(flag==1)
+       {
+           strcat(novi,token);
+           strcat(novi,"\n");
+       }
+       token=strtok(NULL," ");
+    }
+    novi[strlen(novi)-1]='\0';
+    puts(novi);
+    return 0;
+}
