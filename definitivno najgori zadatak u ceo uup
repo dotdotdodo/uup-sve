@@ -1,0 +1,175 @@
+2. (13) Napisati program koji učitava string koji se sastoji od reči razdvojenih
+spejsom, u svakoj reči se nalaze do dva znaka zagrada koje mogu biti pravilne,
+prvo otvorena pa zatvorena, i nepravilne, tako da se pojavljuju dve otvorene,
+samo otvorena ili samo zatvorena zagrada ili obe zagrade ali u pogrešnom
+redosledu. Program treba da promeni uneti string (ili napravi novi na osnovu
+unetog) tako što će izbaciti reči koje sadrže nepravilne zagrade, a u rečima u
+kojima su pravilne zagrade će obrnuti podstringove koji se nalaze pre i posle
+zagrada.
+Primer:
+Unos: obla(ci) m)e(sec su(n)ce polj)e
+Ispis: (ci)obla ce(n)su
+
+  #include <stdio.h>
+#include <string.h>
+
+#define size 100
+/**
+Unos: obla(ci) m)e(sec su(n)ce polj)e
+Ispis: (ci)obla ce(n)su
+*/
+
+
+///za krajChecker==1
+void stringNator(char* str)
+{
+    char custom[size];
+    char basic[size];
+    int c=0;
+    int k=0;
+    int flag=0;
+    for(int i=0;i<strlen(str);i++){
+    if(str[i]=='(' || flag==1)
+    {
+        custom[k++]=str[i];
+        flag=1;
+        continue;
+    }
+    if(str[i]==')')
+    {
+        custom[k++]=str[i];
+        flag=0;
+        continue;
+    }
+    else basic[c++]=str[i];
+   }
+   strcpy(str,"");
+   strcat(str,custom);
+   strcat(str,basic);
+    str[strlen(str)]='\0';
+}
+///za krajchecker==0
+
+void WortexTheString(char* str)
+{
+    char custom[size];
+    char levi[size];
+    char desni[size];
+    int l=0;
+    int d=0;
+    int k=0;
+    int flag=0;
+    int flag2=0;
+    for(int i=0;i<strlen(str);i++){
+
+    if(str[i]=='(' || flag==1)
+    {
+        custom[k++]=str[i];
+        flag=1;
+        flag2=1;
+        if(str[i]==')')
+        {
+        flag=0;
+        flag2=1;
+        continue;
+        }
+    }
+
+    else if(flag2==0)
+    {
+        levi[l++]=str[i];
+    }
+  else  if(flag2==1)
+    {
+        desni[d++]=str[i];
+    }
+    }
+    /**
+    printf("desni- "); puts(desni);  printf("\n");
+    printf("custom- "); puts(custom);  printf("\n");
+    printf("levi- "); puts(levi);  printf("\n");
+    */
+    strcpy(str,"");
+    strcat(str,desni);
+    strcat(str,custom);
+    strcat(str,levi);
+    str[strlen(str)-1]='\0';
+}
+
+int vibeChecker(char* str)
+{
+    int flag=0;
+
+    for(int i=0;i<strlen(str);i++)
+    {
+        if(str[i]=='(')
+        {
+            if(flag==1) return 0;
+            flag=1;
+        }
+        if(str[i]==')')
+        {
+            if(flag==0) return 0;
+            flag=0;
+
+        }
+    }
+    return 1;
+}
+/// da ako je na kraju ne ako nije
+int krajChecker(char* str)
+{
+    for(int i=0;i<strlen(str);i++)
+    {
+        if(str[i]==')' && str[i+1]=='\0')
+            return 1;
+    }
+    return 0;
+}
+
+/**
+Unos: obla(ci) m)e(sec su(n)ce polj)e
+Ispis: (ci)obla ce(n)su
+*/
+
+int main()
+{
+    char str[size]="";
+    fgets(str,size,stdin);
+    str[strlen(str)-1]='\0';
+    char novi[size]="";
+    int k=0;
+    char* token=strtok(str," ");
+    while(token)
+    {
+        if(vibeChecker(token))
+        {
+        if(krajChecker(token))
+        {
+            stringNator(token);
+                for(int i=0;i<strlen(token);i++)
+                {
+                    novi[k++]=token[i];
+                }
+                novi[k++]=' ';
+
+        }
+        else
+        {
+           WortexTheString(token);
+           for(int i=0;i<strlen(token);i++)
+                {
+                    novi[k++]=token[i];
+                }
+                novi[k++]=' ';
+
+        }
+    }
+    token=strtok(NULL," ");
+    }
+novi[k-2]='\0';
+puts (novi);
+
+    return 0;
+}
+
