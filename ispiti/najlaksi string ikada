@@ -1,0 +1,44 @@
+2. (13) Napisati program koji učitava string koji sadrži skupove u vitičastim zagradama u kom su
+elementi razdvojeni zarezom, a skupovi spejsom. Program treba da pronađe i ispiše sve nevalidne
+skupove, a to su skupovi koji sadrže bar dva ista elementa.
+Primer:
+Unos: {a,b,c} {34,up, df} {1,2,1} {a,a}
+Ispis:{1,2,1}
+{a,a}
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+/**
+{a,b,c} {34,up, df} {1,2,1} {a,a}
+{1,2,1}
+{a,a}
+*/
+
+#define size 100
+
+int main()
+{
+    char str[size]="";
+    fgets(str,size,stdin);
+    str[strlen(str)-1]='\0';
+    char* token=strtok(str," ");
+    char novi[size]="";
+    while(token)
+    {
+        for(int i=0;i<strlen(token);i++){
+            for(int j=i+1;j<strlen(token);j++){
+                    if(token[i]==token[j] && token[i]!=',' && token[j]!=',')
+                    {
+                        strcat(novi,token);
+                        strcat(novi,"\n");
+                    }
+            }
+        }
+        token=strtok(NULL," ");
+    }
+    novi[strlen(novi)-1]='\0';
+    puts(novi);
+}
