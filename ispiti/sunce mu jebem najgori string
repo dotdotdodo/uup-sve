@@ -1,0 +1,134 @@
+2. (13) Napisati program koji učitava string koji se sastoji od reči razdvojenih
+spejsom, u svakoj reči se nalaze do dva znaka zagrada koje mogu biti pravilne,
+prvo otvorena pa zatvorena, i nepravilne, tako da se pojavljuju na primer dve
+otvorene, samo otvorena ili samo zatvorena zagrada ili obe zagrade ali u
+pogrešnom redosledu. Program treba da promeni uneti string (ili napravi novi na
+osnovu unetog) tako što će izbaciti reči koje sadrže nepravilne zagrade, a u
+rečima u kojima su pravilne zagrade će obrnuti podstring u zagradi.
+Primer:
+Unos: obla(ci) m)e(sec su(nce) polj)e
+Ispis: obla(ic) su(ecn)
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+#define size 100
+/**
+obla(ci) m)e(sec su(nce) polj)e
+obla(ic) su(ecn)
+*/
+
+
+void reverseStr(char* str)
+{
+    int first=0;
+    int last=strlen(str)-1;
+    while(first<last){
+        char pom=str[first];
+        str[first]=str[last];
+        str[last]=pom;
+        first++;
+        last--;
+    }
+}
+
+void stringNator(char* str)
+{
+    char reversable[size]="";
+    int k=0;
+    int flag=0;
+    for(int i=0;i<strlen(str);i++)
+    {
+        if(str[i]=='(')
+        {
+            flag=1;
+            continue;
+        }
+        if(str[i]==')')
+        {
+            flag=0;
+            reverseStr(reversable);
+            continue;
+        }
+        if(flag==1)
+        {
+            reversable[k++]=str[i];
+        }
+    }
+    flag=0;
+         for(int i=0;i<strlen(str);i++)
+        {
+            if(str[i]=='(')
+            {
+                str[i]='(';
+                flag=1;
+                continue;
+            }
+            else if(str[i]==')')
+            {
+                str[i]=')';
+                flag=0;
+            }
+            else if(flag==0)
+            {
+                str[i]=str[i];
+            }
+            else if(flag==1)
+            {
+                for(int k=0;k<=strlen(reversable);k++)
+                {
+                    str[i++]=reversable[k];
+                }
+            }
+        }
+        str[strlen(str)]=')';
+}
+
+int vibeChecker(char* str)
+{
+    int flag=0;
+
+    for(int i=0;i<strlen(str);i++)
+    {
+        if(str[i]=='(')
+        {
+            if(flag==1) return 0;
+            flag=1;
+        }
+        if(str[i]==')')
+        {
+            if(flag==0) return 0;
+            flag=0;
+
+        }
+    }
+    return 1;
+}
+
+int main()
+{
+    char str[size]="";
+    fgets(str,size,stdin);
+    str[strlen(str)-1]=' ';
+    char novi[size]="";
+    char* token=strtok(str, " ");
+    while(token)
+    {
+        if(vibeChecker(token))
+        {
+            stringNator(token);
+            strcat(novi,token);
+            strcat(novi," ");
+        }
+        token=strtok(NULL," ");
+    }
+
+novi[strlen(novi)-1]='\0';
+puts(novi);
+
+
+    return 0;
+}
+
