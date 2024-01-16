@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include <string.h>
+
+#define size 120
+
+    /**2. (13p) Napisati program koji učitava string koji sadrži reči razdovojene spejsom i unutar njega vrši
+    sledeće izmene. Slova reči koja ne sadrži ! treba da pređu u velika slova. Ukoliko reč sadrži jedan
+    ! deo reči pre ! treba da zarotira za jedno mesto u levo. Ukoliko reč sadrži dva ! onda iz dela reči
+    koji je između ! treba ostaviti samo poslednje pojavljivanje nekog slova.
+    Nakon što se izvrše izmene nad učitanim stringom, ispisati ga na konzoli.
+    Primeri:
+
+
+    2. zadatak: Nije dozvoljeno koristiti pomoćni string, niti surogat pomoćnog stringa (dodatni niz nekog
+    drugog tipa u koji se kopira sadržaj ili deo sadržaja prvobitnog stringa) – dozvoljen je rad nad samo
+    jednim nizom char[]. Nije dozvoljeno korišćenje funkcije strtok u ovom zadatku. Dozvoljeno je (nije
+    obavezno) korišćenje funkcije gets u ovom zadatku. Rešenja koja odstupaju od ovih pravila se neće
+    bodovati.
+
+    Nano p!andan! Anan!asu b!ana!no
+    NANO p!dan! nanA!asu b!na!no
+    */
+
+/// 0 exclams
+void upperCase(char* str, int start, int end)
+{
+    for(int i=start;i<=end;i++)
+    {
+        if(str[i]>='a' && str[i]<='z')
+            str[i]=str[i]-32;
+    }
+}
+
+int exclamCounter(char* str, int start, int end)
+{
+    int exclams=0;
+  for(int i=start;i<=end;i++)
+    {
+        if(str[i]=='!') exclams++;
+    }
+    return exclams;
+}
+
+void oneExclam(char* str,int start, int end)
+{
+    int flag=0;
+    int k=start;
+    for(int i=start;i<=end;i++)
+    {
+        if(str[i]=='!')
+        {
+            flag=1;
+            continue;
+        }
+        if(flag==0)
+        {
+            str[k++]=str[i];
+        }
+    }
+    char first=str[start];
+    for(int i=start;i<k;i++)
+    {
+        str[i]=str[i+1];
+    }
+    str[k-1]=first;
+}
+
+/**
+Nano p!andan! Anan!asu b!ana!no
+NANO p!dan! nanA!asu b!na!no
+    */
+
+/// najgora funkcija u ceo uup
+void twoExclam(char *str, int start, int end) {
+    int flag=0;
+    int k=start;
+    for(int i=start;i<=end;i++){
+        if(str[i]=='!' && flag==0)
+        {
+            flag=1;
+            str[k++]='!';
+            continue;
+        }
+        else if(str[i]=='!' && flag==1)
+        {
+             flag=0;
+             str[k++]='!';
+             continue;
+        }
+        if(flag==0 && i != end)
+        {
+            str[k++]=str[i];
+        }
+        if(flag==1)
+        {
+            int j=i+1;
+            int ticket=1;
+            while(j<=end && str[j]!='!')
+            {
+                if(str[j++]==str[i]) ticket=0;
+            }
+            if(ticket==1)
+            {
+                str[k++]=str[i];
+            }
+        }
+    }
+    if(str[end] != '!') str[k++] = str[end];
+    for(int i=k; i<=end; i++) str[i] = ' '; // Fill the rest with spaces
+}
+
+
+    int main()
+    {
+        char str[size]="";
+        fgets(str,size,stdin);
+        str[strlen(str)-1]=' ';
+        int start=0;
+        int end;
+        for(int i=0;i<strlen(str);i++)
+        {
+            if(str[i]==' ')
+            {
+                end=i-1;
+                if(exclamCounter(str,start,end)==0)
+                {
+                    upperCase(str,start,end);
+                }
+                else if(exclamCounter(str,start,end)==1)
+                {
+                    oneExclam(str,start,end);
+                }
+                else twoExclam(str,start,end);
+                start=i+1;
+            }
+        }
+        str[strlen(str)-1]='\0';
+        puts(str);
+    }
+
