@@ -1,0 +1,274 @@
+1. (13p) Napisati program koji učitava kvadratnu matricu celih brojeva većih od 0
+dimenzije veće od 2 i transformiše je tako što odseca ćoškove i kreira romb (privremeno
+se može upisati 0 umesto odsečenih elemenata), zatim odsečene delove popunjava po
+kolonama, tako što iznad upisuje najveći element iz kolone (gledaju se elementi koji su
+ostali posle odsecanja), a ispod najmanji iz kolone. Dozvoljeno je da se matrica odmah
+transformiše u konačan oblik (nije neophodno kreirati matricu u drugom koraku).
+Primeri:
+1 3 5 6 7 5
+2 3 4 5 1 6
+9 1 1 3 4 8
+5 6 7 8 7 9
+1 2 3 4 5 0
+3 4 1 2 6 4
+
+5 6
+3 4 5 1
+9 1 1 3 4 8
+5 6 7 8 7 9
+2 3 4 5
+1 2
+
+9 6 5 6 7 9
+9 3 4 5 1 9
+9 1 1 3 4 8
+5 6 7 8 7 9
+5 2 3 4 5 8
+5 1 1 2 1 8
+
+1 3 5 6 7
+2 3 4 5 1
+9 1 1 3 4
+5 6 7 8 7
+1 2 3 4 5
+
+5
+3 4 5
+9 1 1 3 4
+6 7 8
+3
+
+9 6 5 8 4
+9 3 4 5 4
+9 1 1 3 4
+9 6 7 8 4
+9 1 3 3 4
+#include <stdio.h>
+#include <stdlib.h>
+
+/**
+6
+1 3 5 6 7 5
+2 3 4 5 1 6
+9 1 1 3 4 8
+5 6 7 8 7 9
+1 2 3 4 5 0
+3 4 1 2 6 4
+
+5
+1 3 5 6 7
+2 3 4 5 1
+9 1 1 3 4
+5 6 7 8 7
+1 2 3 4 5
+*/
+
+void matrixSpawner(int n, int mat[n][n])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d",&mat[i][j]);
+        }
+    }
+}
+
+void printMatrix(int n, int mat[n][n])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            printf("%2d ",mat[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void RombUp(int n, int mat[n][n])
+{
+                mat[0][0]=0;
+                mat[0][1]=0;
+                mat[0][n-2]=0;
+                mat[0][n-1]=0;
+                mat[1][0]=0;
+                mat[1][n-1]=0;
+
+                mat[n-2][0]=0;
+                mat[n-1][0]=0;
+                mat[n-1][1]=0;
+                mat[n-2][n-1]=0;
+                mat[n-1][n-2]=0;
+                mat[n-1][n-1]=0;
+}
+
+int fetchMax(int n, int mat[n][n], int j)
+{
+    int max=0;
+    for(int i=0;i<n-1;i++)
+    {
+        if(mat[i][j]>max && mat[i][j]!=0) max=mat[i][j];
+    }
+    return max;
+}
+
+int fetchMin(int n, int mat[n][n], int j)
+{
+    int min=9;
+    for(int i=0;i<n-1;i++)
+    {
+        if(mat[i][j]<min && mat[i][j]!=0) min=mat[i][j];
+    }
+    return min;
+}
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    int mat[n][n];
+    matrixSpawner(n,mat);
+    RombUp(n,mat);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+                mat[0][0]=fetchMax(n,mat,0);
+                mat[0][1]=fetchMax(n,mat,1);
+                mat[0][n-2]=fetchMax(n,mat,n-2);
+                mat[0][n-1]=fetchMax(n,mat,n-1);
+                mat[1][0]=fetchMax(n,mat,0);
+                mat[1][n-1]=fetchMax(n,mat,n-1);
+
+                mat[n-2][0]=fetchMin(n,mat,0);
+                mat[n-1][0]=fetchMin(n,mat,0);
+                mat[n-1][1]=fetchMin(n,mat,1);
+                mat[n-2][n-1]=fetchMin(n,mat,n-1);
+                mat[n-1][n-2]=fetchMin(n,mat,n-2);
+                mat[n-1][n-1]=fetchMin(n,mat,n-1);
+        }
+    }
+    printMatrix(n,mat);
+    return 0;
+
+}
+2. (12p) Napisati program koji učitava string sastavljen od reči koji sadrže mala slova
+abecede, a neke reči imaju i veliko X, koje ne može biti na kraju reči. Program treba da
+od unetog stringa napravi novi string u kom će se reči koje sadrže X promeniti tako što se
+ukrste stringovi pre i posle X. Ukrštanje se radi tako što se između svaka dva slova levo
+od X umetne jedno slovo iz podstringa desno od X, slova se umeću redom, kada se
+potroše sva slova iz desnog podstringa, kreće se od početka. Reči koje ne sadrže X
+prenose se u rezultujući string bez izmena.
+Primer:
+Unos: abcdeXhz zhj bbbbXac cccXs
+Ispis: ahbzchdze zhj babcbab cscsc
+
+#include <stdio.h>
+#include <string.h>
+
+#define size 100
+/**
+Unos: abcdeXhz zhj bbbbXac cccXs
+Ispis: ahbzchdze zhj babcbab cscsc
+*/
+
+int Xfinder(char* str)
+{
+    for(int i=0;i<strlen(str);i++){
+        if(str[i]=='X')
+            return 1;
+    }
+    return 0;
+}
+
+void afterX(char* str)
+{
+    int flag=0;
+    int k=0;
+    for(int i=0;i<strlen(str);i++){
+        if(str[i]=='X')
+        {
+            flag=1;
+            continue;
+        }
+        if(flag==1)
+        {
+            str[k++]=str[i];
+        }
+    }
+    str[k]='\0';
+}
+
+void beforeX(char* str)
+{
+    int flag=1;
+    int k=0;
+    for(int i=0;i<strlen(str);i++){
+        if(str[i]=='X')
+        {
+            flag=0;
+            continue;
+        }
+        if(flag==1)
+        {
+            str[k++]=str[i];
+        }
+    }
+    str[k]='\0';
+}
+
+void interWeave(char* str1, char* str2,char* result)
+{
+    int i=0; int j=0; int k=0;
+    int hold=strlen(str1)-1;
+    int limit=strlen(str2);
+    while(i!=hold+1)
+    {
+        result[k++]=str1[i++];
+        result[k++]=str2[j++];
+        if(j>=limit)
+        {
+            j=0;
+        }
+    }
+    result[k-1]='\0';
+}
+
+
+int main()
+{
+        char str[size];
+        fgets(str,size,stdin);
+        str[strlen(str)-1]=' ';
+        char before[size];
+        char after[size];
+        char result[size]="";
+        strcpy(before,str);
+        strcpy(after,str);
+        beforeX(before);
+        afterX(after);
+        char novi[size]="";
+        char* token=strtok(str," ");
+        while(token)
+        {
+            if(Xfinder(token))
+            {
+                strcpy(before,token);
+                strcpy(after,token);
+                beforeX(before);
+                afterX(after);
+                interWeave(before,after,result);
+                strcat(novi,result);
+                strcat(novi," ");
+            }
+            else
+            {
+            strcat(novi,token);
+            strcat(novi," ");
+            }
+            token=strtok(NULL," ");
+        }
+        novi[strlen(novi)-1]='\0';
+        puts(novi);
+
+return 0;
+}
+
+
+
+
