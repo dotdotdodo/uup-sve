@@ -1,0 +1,81 @@
+1. (13p) Napisati program koji učitava matricu i ceo broj n i u učitanoj matrici
+pronalazi najveći kvadrat koji se sastoji samo od cifara broja n. Ukoliko takav
+kvadrat postoji ispisati vrstu i kolonu gornjeg levog temena pronađenog kvadrata
+u matrici i dimenziju kvadrata. Ako ne postoji ispisati poruku.
+Primer:
+n = 23561
+3 8 3 6 7 3
+2 9 2 5 5 6
+1 9 3 1 6 8
+7 6 1 6 6 9
+
+Rezultat:
+teme: (1,2) dim:3X3
+
+
+#include <stdio.h>
+#include <string.h>
+
+#define size 100
+
+/**
+4 6
+3 8 3 6 7 3
+2 9 2 5 5 6
+1 9 3 1 6 8
+7 6 1 6 6 9
+23561
+*/
+
+void spawnMatrix(int n,int m, int mat[n][m])
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            scanf("%d",&mat[i][j]);
+        }
+    }
+}
+
+int numberCheck(int input, int br)
+{
+    while(br)
+    {
+        int checker=br%10;
+        if(checker==input) return 1;
+        br/=10;
+    }
+    return 0;
+
+}
+
+
+int main() {
+
+        int n,m;
+        scanf("%d %d",&n,&m);
+        int mat[n][m];
+        spawnMatrix(n,m,mat);
+        int number;
+        scanf("%d",&number);
+        for(int x=3;x<n;x++){
+            for(int y=3;y<m;y++){
+
+                for(int i=0;i<=n-x;i++){
+                    for(int j=0;j<=m-y;j++){
+                        int flag=1;
+                        for(int p=i;p<x+i;p++){
+                            for(int q=j;q<y+j;q++){
+                                    if(numberCheck(mat[p][q],number)==0) flag=0;
+                            }
+                        }
+                        if(flag==1)
+                        {
+                            printf("teme (%d,%d) dim %dX%d\n",i,j,x,y);
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+}
+
