@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define size 100
+
+/**
+abc nkj amng nrp cbf ak
+Ispis: abcmngk nkjrp cbf
+*/
+
+
+
+int main() {
+
+    char str[size];
+    fgets(str,size,stdin);
+    str[strlen(str)-1]='\0';
+
+    char words[26]="";
+    int k=0;
+    char creations[size][26];
+
+
+    char* token=strtok(str," ");
+    while(token)
+    {
+        char safe=token[0];
+        int found=0;
+        for(int i=0;i<k;i++){
+            if(words[i]==safe)
+            {
+                found=1;
+                strcat(creations[i],token+1);
+                break;
+            }
+        }
+            if(found==0)
+            {
+                words[k]=safe;
+                strcpy(creations[k],token+1);
+                k++;
+            }
+
+        token=strtok(NULL," ");
+    }
+    char novi[size]="";
+    for(int i=0;i<k;i++)
+    {
+        char temp[2]={words[i],'\0'};
+        strcat(novi,temp);
+        strcat(novi,creations[i]);
+        strcat(novi," ");
+    }
+    novi[strlen(novi)-1]='\0';
+    puts(novi);
+    return 0;
+
+}
+
+
