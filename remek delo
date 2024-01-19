@@ -1,0 +1,91 @@
+2.(12p) Napisati program koji u datom stringu koji se sastoji od reči razdvojenih spejsom
+pronalazi par reči koji imaju najdužu istu krajnju (završnu) sekvencu karaktera. Ako ima
+više rešenja ispisati bilo koje.
+Primer
+Unos: jghcba ba vcba jvcba
+Ispis: vcba jvcba
+
+
+#include <stdio.h>
+#include <string.h>
+
+#define size 100
+
+/**
+jghcba ba vcba jvcba
+
+jghcba
+jvcba
+
+jghcba
+ba
+
+vcba
+jvcba
+*/
+
+int compareStr(char* str1, char* str2)
+{
+    if(strcmp(str1,str2)==0) return 0;
+    int sameCounter=1;
+    for(int i=0;i<strlen(str1)-1;i++){
+        for(int j=i;j<strlen(str2)-1;j++){
+            if(str1[i]==str2[j])
+            {
+                sameCounter++; break;
+            }
+        }
+    }
+return sameCounter;
+}
+
+int main() {
+
+    char str[size];
+    fgets(str,size,stdin);
+    str[strlen(str)-1]=' ';
+
+    char safe[size];
+    strcpy(safe,str);
+
+    int max=0;
+    char novi[size];
+    char checker[size]="";
+    char* token=strtok(str," ");
+
+    while(token)
+    {
+        int start=0;
+        int end;
+        for(int i=0;i<strlen(safe);i++){
+            if(safe[i]==' ')
+            {
+                end=i-1;
+                int k=0;
+                for(int i=start;i<=end;i++)
+                {
+                    checker[k++]=safe[i];
+                }
+                checker[k++]='\0';
+                if(compareStr(token,checker)>max && strcmp(token,checker)!=0)
+                {
+                    strcpy(novi,"");
+                    strcat(novi,token);
+                    strcat(novi," ");
+                    strcat(novi,checker);
+                    max=compareStr(token,checker);
+                }
+                start=i+1;
+            }
+        }
+        token=strtok(NULL," ");
+    }
+
+    puts(novi);
+
+}
+
+
+
+
+
