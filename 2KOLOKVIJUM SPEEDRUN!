@@ -588,4 +588,227 @@ između znaka - šiftuje za jedno mesto u levo.
 Primer: 345-1354-321
 Rezultat: 453-3541-213
 
+#include <stdio.h>
+#include <string.h>
+#define size 100
+/**
+Primer: 345-1354-321
+Rezultat: 453-3541-213
+*/
+
+int main() {
+  char str[size] = "";
+  fgets(str, size, stdin);
+  str[strlen(str) - 1] = '-';
+
+  int start = 0;
+  int end;
+  for (int i = 0; i < strlen(str); i++) {
+    if (str[i] == '-') {
+      end = i - 1;
+      char temp = str[start];
+      for (int j = start+1; j <= end; j++) {
+        str[j - 1] = str[j];
+      }
+      str[end] = temp;
+      start = i + 1;
+    }
+  }
+  str[strlen(str) - 1] = '\0';
+  puts(str);
+
+  return 0;
+}
+
+---------------------------------
+Računarski fakultet
+Univerzitet Union
+
+Uvod u programiranje - 2017/2018
+drugi kolokvijum - grupa 1
+
+1. (6 poena) Napisati dve funkcije koje izračunavaju slededi koren, jedna iterativno a druga
+rekurzivno za dato n. Dati su primeri za n=6 i n=7.
+
+
+#include <math.h>
+#include <stdio.h>
+
+double f1(double start, double end, double n, int cache, int remember) {
+  if (remember % 2 == 0) {
+    if (n == 2) {
+      if (cache % 2 == 1) {
+        return sqrt(start / n);
+      } else {
+        return sqrt(end / n);
+      }
+    } else {
+      if (cache % 2 == 1) {
+        printf("start-%lf n-%lf\n", start, n);
+        return sqrt(start / n + f1(start + 1, end, n - 2, cache - 1, remember));
+      } else {
+        printf("end-%lf n-%lf\n", end, n);
+        return sqrt(end / n + f1(start, end - 1, n - 2, cache - 1, remember));
+      }
+    }
+  }
+  if (remember % 2 == 1) {
+    if (n == 2) {
+      if (cache % 2 == 0) {
+        return sqrt(start / n);
+      } else {
+        return sqrt(end / n);
+      }
+    } else {
+      if (cache % 2 == 0) {
+        printf("start-%lf n-%lf\n", start, n);
+        return sqrt(start / n + f1(start + 1, end, n - 2, cache - 1, remember));
+      } else {
+        printf("end-%lf n-%lf\n", end, n);
+        return sqrt(end / n + f1(start, end - 1, n - 2, cache - 1, remember));
+      }
+    }
+  }
+}
+
+double f1_i(int n) {
+  double sum = 0;
+  if (n % 2 == 1) {
+    double start = n / 2;
+    double end = (n + 2) / 2;
+    double dole = 2;
+    for (int i = 0; i < n; i++) {
+      if (i % 2 == 1) {
+        printf("start-%lf dole-%lf\n", start, dole);
+        sum = sqrt(start / dole + sum);
+        start -= 1;
+        dole += 2;
+      }
+      if (i % 2 == 0) {
+        printf("end-%lf dole-%lf\n", end, dole);
+        sum = sqrt(end / dole + sum);
+        end += 1;
+        dole += 2;
+      }
+    }
+  }
+  if (n % 2 == 0) {
+    double start = n / 2;
+    double end = (n + 2) / 2;
+    double dole = 2;
+    for (int i = 0; i < n; i++) {
+      if (i % 2 == 0) {
+        printf("start-%lf dole-%lf\n", start, dole);
+        sum = sqrt(start / dole + sum);
+        start -= 1;
+        dole += 2;
+      }
+      if (i % 2 == 1) {
+        printf("end-%lf dole-%lf\n", end, dole);
+        sum = sqrt(end / dole + sum);
+        end += 1;
+        dole += 2;
+      }
+    }
+  }
+  return sum;
+}
+
+int main() {
+  int n;
+  scanf("%d", &n);
+  printf("%lf\n", f1(1, n, n * 2, n, n));
+  printf("%lf\n", f1_i(n));
+  return 0;
+}
+-----------------------------------------------------------------------------------------
+2. (7 poena). Napisati funkciju koja za uneti broj n pravi matricu kao u datim primerima. Cifre broja n
+se postavljaju na sporednu dijagonalu, a zatim se vrste popunjavaju redom dupliranim brojevima,
+kada se dođe do 9, slededi broj je 0. Cifra na sporednoj dijagonali se uvek duplira sa desne strane.
+n=45901 n=999 n=90
+2 2 3 3 4 8 8 9 8 9
+3 4 4 5 5 8 9 9 0 0
+8 8 9 9 0 9 9 0
+9 0 0 1 1
+1 1 2 2 3
+
+#include <math.h>
+#include <stdio.h>
+
+void printMatrix(int m, int mat[m][m]) {
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < m; j++) {
+      printf("%2d", abs(mat[i][j] % 10));
+    }
+    printf("\n");
+  }
+}
+
+void generateMatrix(int m, int mat[m][m]) {
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < m; j++) {
+      scanf("%d", &mat[i][j]);
+    }
+  }
+}
+
+int brCifara(int n) {
+  int brCifara = 0;
+  while (n) {
+    brCifara++;
+    n /= 10;
+  }
+  return brCifara;
+}
+
+/**
+45901
+*/
+
+int main() {
+  int n;
+  scanf("%d", &n);
+  int m = brCifara(n);
+  int y = 0;
+  int mat[m][m];
+  for (int i = m - 1; i >= 0; i--) {
+    mat[i][y++] = n % 10;
+    n /= 10;
+  }
+
+  int tag = m - 1;
+  int zaMatricu;
+  int counter;
+  for (int i = 0; i < m; i++) {
+    int br = mat[i][tag];
+    zaMatricu = br - (tag / 2);
+    if (i % 2 == 1) {
+      zaMatricu -= 1;
+      {
+        if (zaMatricu == -1) {
+          zaMatricu = 9;
+        }
+      }
+    }
+    if (i % 2 == 0) {
+      counter = 0;
+    } else
+      counter = 1;
+    for (int j = 0; j < m; j++) {
+      if (counter == 2) {
+        zaMatricu++;
+        counter = 0;
+      }
+      mat[i][j] = zaMatricu;
+      counter++;
+    }
+    tag--;
+  }
+  printMatrix(m, mat);
+  return 0;
+}
+
+
+
+
 
