@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    FILE *fp;  // Declare a pointer to a FILE structure
+
+    fp = fopen("mojFajl.txt", "w");  // Open or create a file named "mojFajl.txt" for writing
+
+    if (fp != NULL) {  // Check if the file is successfully opened
+
+        printf("Fajl je uspesno otvoren.\n");  // Print a success message
+
+        fputs("Ispis", fp);  // Write the string "Ispis" to the file
+    } else {
+        printf("Greska.\n");  // Print an error message if the file couldn't be opened
+    }
+
+    if (fclose(fp) != EOF) {  // Close the file; check if the file is successfully closed
+
+        printf("Fajl je uspesno zatvoren.\n");  // Print a success message
+
+        exit(0);  // Exit the program with a success code
+
+    } else {
+
+        exit(1);  // Exit the program with an error code if fclose fails
+    }
+}
