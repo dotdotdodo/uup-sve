@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Element {
+    int vred;
+    struct Element* sledeci;
+} Element;
+
+Element* dodaj_na_pocetak(Element* lista, int vred) {
+    Element* novi = (Element*) malloc(sizeof(Element));
+    novi->vred = vred;
+    novi->sledeci = lista;
+    return novi;
+}
+
+Element* obrisi_vrednost(Element* lista, int vred) {
+    while (lista && lista->vred == vred) {
+        Element* temp = lista;
+        lista = lista->sledeci;
+        free(temp);
+    }
+    if (lista) {
+        Element* trenutni = lista;
+        while (trenutni->sledeci) {
+            if (trenutni->sledeci->vred == vred) {
+                Element* temp = trenutni->sledeci;
+                trenutni->sledeci = trenutni->sledeci->sledeci;
+                free(temp);
+            } else {
+                trenutni = trenutni->sledeci;
+            }
+        }
+    }
+    return lista;
+}
+
+Element* obrisi_sa_pozicije(Element* lista, int poz) {
+    if (poz == 0) {
+        Element* temp = lista;
+        lista = lista->sledeci;
+        free(temp);
+    } else {
+        Element* trenutni = lista;
+        for (int i = 0; i < poz - 1; i++) {
+            if (trenutni->sledeci == NULL) {
+                return lista;
+            }
+            trenutni = trenutni->sledeci;
+        }
+        Element* temp = trenutni->sledeci;
+        trenutni->sledeci = trenutni->sledeci->sledeci;
+        free(temp);
+    }
+    return lista;
+}
+
+void ispis(Element* lista) {
+    while (lista) {
+        printf("%d ", lista->vred);
+        lista = lista->sledeci;
+    }
+    printf("\n");
+}
+
+void oslobodi(Element* lista) {
+    while (lista) {
+        Element* temp = lista;
+        lista = lista->sledeci;
+        free(temp);
+    }
+}
+
+int main() {
+    Element* lista = NULL;
+    int vred;
+
+    printf("Unesite vrednosti za listu (unos prekida broj 0):\n");
+    scanf("%d", &vred);
+
+    while (vred != 0) {
+        lista = dodaj_na_pocetak(lista, vred);
+        scanf("%d", &vred);
+    }
+
+    int A;
+    printf("\nIzaberite operaciju (unos prekida broj 0):\n");
+    printf("1 - Obrisi vrednost\n");
+    printf("2 - Obrisi sa pozicije\n");
+    scanf("%d", &A);
+
+    while (A != 0) {
+        int B;
+        scanf("%d", &B);
+
+        if (A == 1) {
+            lista = obrisi_vrednost(lista, B);
+            printf("Vrednost %d je obrisana iz liste.\n", B);
+        } else if (A == 2) {
+            lista = obrisi_sa_pozicije(lista, B);
+            printf("Element na poziciji %d je obrisan iz liste.\n", B);
+        }
+
+        printf("\nIzaberite sledecu operaciju (unos prekida broj 0):\n");
+        printf("1 - Obrisi vrednost\n");
+        printf("2 - Obrisi sa pozicije\n");
+        scanf("%d", &A);
+    }
+
+    printf("\nLista nakon izvrsenih operacija:\n");
+    ispis(lista);
+
+    printf("\nOslobadjanje memorije...\n");
+    oslobodi(lista);
+
+    printf("Program zavrsen.\n");
+    return 0;
+}
+
+
