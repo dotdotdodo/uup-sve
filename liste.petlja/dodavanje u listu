@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Element {
+    int broj;
+    struct Element* sledeci;
+} Element;
+
+Element* dodaj_na_kraj(Element* lista, int broj) {
+    Element* novi = (Element*)malloc(sizeof(Element));
+    novi->broj = broj;
+    novi->sledeci = NULL;
+
+    if (lista == NULL) {
+        return novi;
+    }
+
+    Element* trenutni = lista;
+    while (trenutni->sledeci != NULL) {
+        trenutni = trenutni->sledeci;
+    }
+    trenutni->sledeci = novi;
+
+    return lista;
+}
+
+Element* dodaj_na_pocetak(Element* lista, int broj) {
+    Element* novi = (Element*)malloc(sizeof(Element));
+    novi->broj = broj;
+    novi->sledeci = lista;
+
+    return novi;
+}
+
+Element* dodaj_na_poziciju(Element* lista, int broj, int i) {
+    Element* novi = (Element*)malloc(sizeof(Element));
+    novi->broj = broj;
+
+    if (i == 0 || lista == NULL) {
+        novi->sledeci = lista;
+        return novi;
+    }
+
+    Element* trenutni = lista;
+    for (int j = 0; j < i - 1 && trenutni->sledeci != NULL; j++) {
+        trenutni = trenutni->sledeci;
+    }
+
+    novi->sledeci = trenutni->sledeci;
+    trenutni->sledeci = novi;
+
+    return lista;
+}
+
+void ispisi_listu(Element* lista) {
+    Element* trenutni = lista;
+    while (trenutni != NULL) {
+        printf("%d ", trenutni->broj);
+        trenutni = trenutni->sledeci;
+    }
+    printf("\n");
+}
+
+void izbrisi_listu(Element* lista) {
+    Element* trenutni = lista;
+    while (trenutni != NULL) {
+        Element* sledeci = trenutni->sledeci;
+        free(trenutni);
+        trenutni = sledeci;
+    }
+}
+
+int main() {
+    Element* lista = NULL;
+    int A, B, X;
+
+    while (1) {
+        scanf("%d", &A);
+        if (A == 0) break;
+
+        scanf("%d", &B);
+        switch (A) {
+            case 1:
+                lista = dodaj_na_kraj(lista, B);
+                break;
+            case 2:
+                lista = dodaj_na_pocetak(lista, B);
+                break;
+            case 3:
+                scanf("%d", &X);
+                lista = dodaj_na_poziciju(lista, B, X);
+                break;
+        }
+    }
+
+    ispisi_listu(lista);
+    izbrisi_listu(lista);
+
+    return 0;
+}
