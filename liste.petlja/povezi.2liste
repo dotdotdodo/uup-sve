@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Element {
+    int broj;
+    struct Element* sledeci;
+} Element;
+
+Element* noviElement(int broj) {
+    Element* novi = (Element*)malloc(sizeof(Element));
+    novi->broj = broj;
+    novi->sledeci = NULL;
+    return novi;
+}
+
+void dodajNaPocetak(Element** lista, int broj) {
+    Element* novi = noviElement(broj);
+    novi->sledeci = *lista;
+    *lista = novi;
+}
+
+void nadovezi(Element** lista1, Element* lista2) {
+    Element* temp = *lista1;
+    if(temp != NULL) {
+        while(temp->sledeci != NULL) {
+            temp = temp->sledeci;
+        }
+        temp->sledeci = lista2;
+    } else {
+        *lista1 = lista2;
+    }
+}
+
+
+void ispis(Element* lista) {
+    while (lista != NULL) {
+        printf("%d ", lista->broj);
+        lista = lista->sledeci;
+    }
+    printf("\n");
+}
+
+void obrisiListu(Element** lista) {
+    Element* trenutni = *lista;
+    Element* sledeci;
+
+    while (trenutni != NULL) {
+        sledeci = trenutni->sledeci;
+        free(trenutni);
+        trenutni = sledeci;
+    }
+
+    *lista = NULL;
+}
+
+int main() {
+    Element* lista1 = NULL;
+    Element* lista2 = NULL;
+    int broj;
+
+    printf("Unesite brojeve za prvu listu (0 za kraj):\n");
+    while (1) {
+        scanf("%d", &broj);
+        if (broj == 0)
+            break;
+        dodajNaPocetak(&lista1, broj);
+    }
+
+    printf("Unesite brojeve za drugu listu (0 za kraj):\n");
+    while (1) {
+        scanf("%d", &broj);
+        if (broj == 0)
+            break;
+        dodajNaPocetak(&lista2, broj);
+    }
+
+    nadovezi(&lista1, lista2);
+    printf("Nadovezana lista:\n");
+    ispis(lista1);
+
+    obrisiListu(&lista1);
+    obrisiListu(&lista2);
+
+    return 0;
+}
+
