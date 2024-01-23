@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Element {
+    int vred;
+    struct Element* sledeci;
+} Element;
+
+Element* dodaj_sortirano(Element* lista, int vred)
+{
+    Element* novi=(Element*)malloc(sizeof(Element));
+    novi->vred=vred;
+    if(lista==NULL || lista->vred>=vred){
+        novi->sledeci=lista;
+        lista=novi;
+    }
+    else
+    {
+        Element* trenutni=lista;
+        while(trenutni->sledeci!=NULL && trenutni->sledeci->vred<vred)
+        {
+            trenutni=trenutni->sledeci;
+        }
+        novi->sledeci=trenutni->sledeci;
+        trenutni->sledeci=novi;
+    }
+    return lista;
+}
+
+void ispis(Element* lista) {
+    while (lista) {
+        printf("%d ", lista->vred);
+        lista = lista->sledeci;
+    }
+    printf("\n");
+}
+
+void oslobodi(Element* lista) {
+    while (lista) {
+        Element* temp = lista;
+        lista = lista->sledeci;
+        free(temp);
+    }
+}
+
+int main() {
+    Element* lista = NULL;
+    int vred;
+    scanf("%d", &vred);
+    while (vred != 0) {
+        lista = dodaj_sortirano(lista, vred);
+        scanf("%d", &vred);
+    }
+    ispis(lista);
+    oslobodi(lista);
+    return 0;
+}
+
+
+
+
+
