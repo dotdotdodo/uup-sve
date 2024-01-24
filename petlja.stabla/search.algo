@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definition of a binary search tree node
+typedef struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+// Function to create a new node with the given data
+Node* createNode(int data) {
+    // Allocate memory for the new node
+    Node* newNode = (Node*)malloc(sizeof(Node));
+
+    // Check for memory allocation errors
+    if (!newNode) {
+        printf("Memory error\n");
+        return NULL;
+    }
+
+    // Initialize node data and set left and right pointers to NULL
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+
+    return newNode;
+}
+
+// Function to insert a new node with the given data into the binary search tree
+Node* insertNode(Node* root, int data) {
+    if (root == NULL) {
+        // If the tree is empty, create a new node and make it the root
+        root = createNode(data);
+    } else if (data <= root->data) {
+        // If the data is less than or equal to the current node's data,
+        // recursively insert into the left subtree
+        root->left = insertNode(root->left, data);
+    } else {
+        // If the data is greater than the current node's data,
+        // recursively insert into the right subtree
+        root->right = insertNode(root->right, data);
+    }
+    return root;
+}
+
+// Function to search for a value in the binary search tree
+int search(Node* root, int data) {
+    while (root != NULL) {
+        if (data < root->data) {
+            // If the data is less than the current node's data, go left
+            root = root->left;
+        } else if (data > root->data) {
+            // If the data is greater than the current node's data, go right
+            root = root->right;
+        } else {
+            // If the data is equal to the current node's data, it's found
+            return 1;
+        }
+    }
+    // If the data is not found in the tree
+    return 0;
+}
+
+int main() {
+    Node* root = NULL;
+    int N, M, data;
+
+    // Input the number of elements to insert (N) and the number of queries (M)
+    printf("Enter the number of elements to insert (N): ");
+    scanf("%d", &N);
+
+    printf("Enter the number of queries (M): ");
+    scanf("%d", &M);
+
+    // Insert N elements into the binary search tree
+    printf("Enter %d elements to insert into the tree:\n", N);
+    for (int i = 0; i < N; i++) {
+        printf("Element %d: ", i + 1);
+        scanf("%d", &data);
+        root = insertNode(root, data);
+    }
+
+    // Perform M queries to search for elements in the tree
+    printf("Enter %d elements to search for in the tree:\n", M);
+    for (int i = 0; i < M; i++) {
+        printf("Query %d: ", i + 1);
+        scanf("%d", &data);
+
+        // Print the result of the search
+        printf("Result: %s\n", search(root, data) ? "True" : "False");
+    }
+
+    return 0;
+}
+
