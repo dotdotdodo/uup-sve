@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (!newNode) {
+        printf("Memory error\n");
+        return NULL;
+    }
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+Node* insertNode(Node* root, int data) {
+    if (root == NULL) {
+        root = createNode(data);
+    } else if (data <= root->data) {
+        root->left = insertNode(root->left, data);
+    } else {
+        root->right = insertNode(root->right, data);
+    }
+    return root;
+}
+
+int findDepth(Node* node) {
+    if (node == NULL)
+        return 0;
+    else {
+        int leftDepth = findDepth(node->left);
+        int rightDepth = findDepth(node->right);
+        if (leftDepth > rightDepth)
+            return(leftDepth + 1);
+        else return(rightDepth + 1);
+    }
+}
+
+int main() {
+    Node* root = NULL;
+    int N, data;
+    scanf("%d", &N);
+    for (int i = 0; i < N; i++) {
+        scanf("%d", &data);
+        root = insertNode(root, data);
+    }
+    printf("%d\n", findDepth(root));
+    return 0;
+}
