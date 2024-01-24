@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Element
+{
+    int broj;
+    struct Element* levi;
+    struct Element* desni;
+}Element;
+
+
+Element* create_node(int broj)
+{
+    Element* novi=(Element*)malloc(sizeof(Element));
+    novi->broj=broj;
+    novi->levi=NULL;
+    novi->desni=NULL;
+    return novi;
+}
+
+Element* insert_node(Element* root, int broj)
+{
+    if(root==NULL)
+    {
+        root=create_node(broj);
+    }
+    else if(broj <= root->broj)
+    {
+        root->levi=insert_node(root->levi,broj);
+    }
+    else
+    {
+        root->desni=insert_node(root->desni,broj);
+    }
+    return root;
+}
+
+int findMin(Element* root)
+{
+    while(root->levi!=NULL)
+    {
+        root=root->levi;
+    }
+    return root->broj;
+}
+
+int findMax(Element* root)
+{
+    while(root->desni!=NULL)
+    {
+        root=root->desni;
+    }
+    return root->broj;
+}
+
+int main() {
+    Element* root = NULL;
+    int N, data;
+    scanf("%d", &N);
+    for (int i = 0; i < N; i++) {
+        scanf("%d", &data);
+        root = insert_node(root, data);
+    }
+    printf("%d\n", findMin(root));
+    printf("%d\n", findMax(root));
+    return 0;
+}
