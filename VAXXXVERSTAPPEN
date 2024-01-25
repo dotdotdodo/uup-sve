@@ -1,1 +1,213 @@
 
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Element {
+  int trka;
+  char racer;
+  float time;
+  struct Element* sledeci;
+} Element;
+
+Element* novi_element(int trka, char racer, float time) {
+  Element* novi = (Element*)malloc(sizeof(Element));
+  novi->trka = trka;
+  novi->racer = racer;
+  novi->time = time;
+  novi->sledeci = NULL;
+  return novi;
+}
+
+Element* dodajSortirano1(Element* lista, Element* novi) {
+  if (lista == NULL || novi->trka < lista->trka || (novi->trka == lista->trka && novi->time > lista->time)) {
+    novi->sledeci = lista;
+    return novi;
+  } else {
+    Element* t = lista;
+    while (t->sledeci != NULL && (novi->trka > t->sledeci->trka || (novi->trka == t->sledeci->trka && novi->time < t->sledeci->time))) {
+      t = t->sledeci;
+    }
+    novi->sledeci = t->sledeci;
+    t->sledeci = novi;
+    return lista;
+  }
+}
+
+Element* LOAD(Element* lista) {
+  FILE* f = fopen("trke.txt", "r");
+  if (f == NULL) {
+    printf("ERRRORR!\n");
+    return lista;
+  }
+  char line[255];
+  while (fgets(line, sizeof(line), f)) {
+    char* token = strtok(line, " ");
+    int trka = atoi(token);
+    char racer = *strtok(NULL, " ");
+    float time = atof(strtok(NULL, " "));
+    Element* novi = novi_element(trka, racer, time);
+    lista = dodajSortirano1(lista, novi);
+  }
+  return lista;
+}
+
+void ispisi(Element* lista) {
+  while (lista != NULL) {
+    printf("| %2d | %2c | %2f | ", lista->trka, lista->racer, lista->time);
+    lista = lista->sledeci;
+    printf("| %2d | %2c | %2f | \n", lista->trka, lista->racer, lista->time);
+    lista = lista->sledeci;
+  }
+}
+
+void Exit(Element* lista) {
+  while (lista != NULL) {
+    Element* temp = lista;
+    lista = lista->sledeci;
+    free(temp);
+  }
+}
+
+int trkaCounter(Element* lista, int trka) {
+  int counter = 0;
+  while (lista != NULL) {
+    if (lista->trka == trka) counter++;
+    lista = lista->sledeci;
+  }
+  return counter;
+}
+
+int findVerstappen(Element* lista, int trka, char racer) {
+  int mesto = trkaCounter(lista, trka) + 1;
+  while (lista != NULL) {
+    if (lista->trka == trka) {
+      mesto--;
+    }
+    if (lista->trka == trka && lista->racer == racer) {
+      return mesto;
+    }
+    lista = lista->sledeci;
+  }
+  return mesto;
+}
+
+int findVerstappenRecursive(Element* lista, int trka, char racer, int mesto) {
+  if (lista == NULL) {
+    return mesto;
+  } else if (lista->trka == trka && lista->racer == racer) {
+    return mesto;
+  } else if (lista->trka == trka) {
+    return findVerstappenRecursive(lista->sledeci, trka, racer, mesto - 1);
+  } else {
+    return findVerstappenRecursive(lista->sledeci, trka, racer, mesto);
+  }
+}
+
+//----------------------------
+
+typedef struct TotalPoints {
+  char racer;
+  int points;
+  struct TotalPoints* next;
+} TotalPoints;
+
+TotalPoints* new_total_points(char racer, int points) {
+  TotalPoints* new = (TotalPoints*)malloc(sizeof(TotalPoints));
+  new->racer = racer;
+  new->points = points;
+  new->next = NULL;
+  return new;
+}
+
+TotalPoints* add_points(TotalPoints* list, char racer, int points) {
+  if (list == NULL) {
+    return new_total_points(racer, points);
+  } else if (list->racer == racer) {
+    list->points += points;
+    return list;
+  } else {
+    list->next = add_points(list->next, racer, points);
+    return list;
+  }
+}
+
+TotalPoints* calculate_total_points(Element* races) {
+  TotalPoints* totals = NULL;
+  while (races != NULL) {
+    int points = 20 - findVerstappen(races, races->trka, races->racer);
+    totals = add_points(totals, races->racer, points);
+    races = races->sledeci;
+  }
+  return totals;
+}
+
+void print_total_points(TotalPoints* totals) {
+  while (totals != NULL) {
+    printf("| %2c | %2d |\n", totals->racer, totals->points);
+    totals = totals->next;
+  }
+}
+
+//----------------------------------------------------------------------
+
+int meni() {
+  int option;
+  printf("1: UPIS\n");
+  printf("2: ISPIS\n");
+  printf("3: Rank of player\n");
+  printf("4: Rezultati\n");
+  printf("5: Izlaz\n");
+  printf("6: proveri kolko gi ima\n");
+  scanf("%d", &option);
+  return option;
+}
+
+int main() {
+  Element* lista = NULL;
+  while (1) {
+    int broj = meni();
+    switch (broj) {
+      case 1: {
+        lista = LOAD(lista);
+        break;
+      }
+      case 2: {
+        ispisi(lista);
+        break;
+      }
+      case 3: {
+        int trk;
+        char verstappen;
+        printf("UNESI TRKU I TRKACA!\n");
+        scanf("%d %c", &trk, &verstappen);
+        int rank = findVerstappen(lista, trk, verstappen);
+        printf("TRKAC '%c' je osvojio %d mesto\n", verstappen, rank);
+        break;
+      }
+      case 4: {
+        TotalPoints* totals = calculate_total_points(lista);
+        print_total_points(totals);
+        break;
+      }
+      case 5: {
+        Exit(lista);
+        printf("GOTOVO!\n");
+        return 0;
+        break;
+      }
+      case 6: {
+        printf("unesi koju trku uces\n");
+        int brooj;
+        scanf("%d", &brooj);
+        printf("trka ima %d trkaca\n", trkaCounter(lista, brooj));
+        break;
+      }
+      default: {
+        printf("POGRESAN UNOS!\n");
+        break;
+      }
+    }
+  }
+}
