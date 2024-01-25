@@ -1,0 +1,211 @@
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Element {
+  char datum[25];
+  int godina;
+  int mesec;
+  int dan;
+  char prvi_tim;
+  char drugi_tim;
+  int skor_prvi;
+  int skor_drugi;
+  struct Element *sledeci;
+} Element;
+
+typedef struct Team {
+  char name;
+  int points;
+  int goals_scored;
+  int goals_conceded;
+  struct Team *next;
+} Team;
+
+
+Element *DodajElement(char datum[], int godina, int mesec, int dan, char prvi_tim, char drugi_tim, int skor_prvi, int skor_drugi) {
+  Element *novi = malloc(sizeof(Element));
+  strcpy(novi->datum, datum);
+  novi->godina = godina;
+  novi->mesec = mesec;
+  novi->dan = dan;
+  novi->prvi_tim = prvi_tim;
+  novi->drugi_tim = drugi_tim;
+  novi->skor_prvi = skor_prvi;
+  novi->skor_drugi = skor_drugi;
+  novi->sledeci = NULL;
+
+  return novi;
+}
+Element *Sortiranje(Element *pocetak, Element *novi) {
+
+  if (pocetak == NULL || novi->mesec < pocetak->mesec || (novi->mesec == pocetak->mesec && novi->dan < pocetak->dan)) {
+    novi->sledeci = pocetak;
+    return novi;
+  }
+  Element *t = pocetak;
+  while (t->sledeci != NULL && (novi->mesec > t->sledeci->mesec || (novi->mesec == t->sledeci->mesec && novi->dan > t->sledeci->dan))) {
+
+    t = t->sledeci;
+  }
+  novi->sledeci = t->sledeci;
+  t->sledeci = novi;
+  return pocetak;
+}
+
+Element *Ucitavanje(Element *pocetak) {
+  FILE *f = fopen("utakmice.txt", "r");
+  if (f == NULL) {
+    printf("Nema ga");
+    return pocetak;
+  }
+  char linija[255];
+  while (fgets(linija, sizeof(linija), f)) {
+    char *datum = strtok(linija, " ");
+    char prvi_tim = *strtok(NULL, " ");
+    char drugi_tim = *strtok(NULL, " ");
+    int skor_prvi = atoi(strtok(NULL, " "));
+    int skor_drugi = atoi(strtok(NULL, "\n"));
+    char buffer[255];
+    strcpy(buffer, datum);
+    char *token = strtok(buffer, "-");
+    int godina = atoi(token);
+    token = strtok(NULL, "-");
+    int mesec = atoi(token);
+    token = strtok(NULL, "-");
+    int dan = atoi(token);
+    Element *novi = DodajElement(datum, godina, mesec, dan, prvi_tim, drugi_tim, skor_prvi, skor_drugi);
+    pocetak = Sortiranje(pocetak, novi);
+  }
+  fclose(f);
+  return pocetak;
+}
+int Broj_golova(Element *pocetak, char c) {
+  char tim = c;
+  int zbir = 0;
+  while (pocetak != NULL) {
+    if (pocetak->prvi_tim == tim) {
+      zbir = zbir + pocetak->skor_prvi;
+    } else if (pocetak->drugi_tim == tim) {
+      zbir = zbir + pocetak->skor_drugi;
+    } else {
+    }
+    pocetak = pocetak->sledeci;
+  }
+  return zbir;
+}
+
+Team *update_team(Team *teams, char name, int goals_scored, int goals_conceded) {
+  Team *t = teams;
+  while (t != NULL && t->name != name) {
+    t = t->next;
+  }
+  if (t == NULL) {
+    t = (Team *)malloc(sizeof(Team));
+    t->name = name;
+    t->points = 0;
+    t->goals_scored = 0;
+    t->goals_conceded = 0;
+    t->next = teams;
+    teams = t;
+  }
+  t->goals_scored += goals_scored;
+  t->goals_conceded += goals_conceded;
+  if (goals_scored > goals_conceded) {
+    t->points += 3;
+  } else if (goals_scored == goals_conceded) {
+    t->points += 1;
+  }
+  return teams;
+}
+
+
+void print_table(Team *teams) {
+  printf("Team | Points | Goals Scored | Goals Conceded\n");
+  printf("-----|--------|--------------|---------------\n");
+  Team *t = teams;
+  while (t != NULL) {
+    printf("  %c  |   %2d   |      %2d      |       %2d\n", t->name, t->points, t->goals_scored, t->goals_conceded);
+    t = t->next;
+  }
+}
+
+void IspisSvih(Element *pocetak) {
+  while (pocetak != NULL) {
+    printf("%s %c %c %d %d \n", pocetak->datum, pocetak->prvi_tim, pocetak->drugi_tim, pocetak->skor_prvi, pocetak->skor_drugi);
+    pocetak = pocetak->sledeci;
+  }
+}
+void OslobodiMemoriju(Element *pocetak) {
+  while (pocetak != NULL) {
+    Element *temp = pocetak;
+    pocetak = pocetak->sledeci;
+    free(temp);
+  }
+}
+
+int meni() {
+  int opcija;
+  printf("Meni:\n");
+  printf("1. Ucitavanje \n");
+  printf("2. Ispis \n");
+  printf("3. Ukupan broj golova za tim.. \n");
+  printf("4. svi golovi\n");
+  printf("5. Izlaz \n");
+  printf("Unesi opciju: ");
+  scanf("%d", &opcija);
+  return opcija;
+}
+
+int main() {
+  int broj;
+  Element *pocetakliste = NULL;
+  while (1) {
+    broj = meni();
+    switch (broj) {
+    case 1:
+      pocetakliste = Ucitavanje(pocetakliste);
+      break;
+    case 2:
+      IspisSvih(pocetakliste);
+      break;
+    case 3: {
+      int broj_golova;
+      char tim;
+      printf("Unesite naziv tima: ");
+      scanf(" %c", &tim);
+      broj_golova = Broj_golova(pocetakliste, tim);
+      printf("\n Broj golova za tim %c je %d\n", tim, broj_golova);
+    } break;
+    case 4: {
+      // Initialize teams pointer
+      Team *teams = NULL;
+
+      // Iterate through the list of matches
+      Element *current_match = pocetakliste;
+      while (current_match != NULL) {
+        // Update team statistics for the first team
+        teams = update_team(teams, current_match->prvi_tim, current_match->skor_prvi, current_match->skor_drugi);
+        // Update team statistics for the second team
+        teams = update_team(teams, current_match->drugi_tim, current_match->skor_drugi, current_match->skor_prvi);
+        // Move to the next match
+        current_match = current_match->sledeci;
+      }
+
+      // Print the table with updated team statistics
+      print_table(teams);
+
+      break;
+
+    } break;
+    case 5:
+      OslobodiMemoriju(pocetakliste);
+      return 0;
+      break;
+    default:
+      printf("\nProbaj opet\n");
+      break;
+    }
+  }
+}
