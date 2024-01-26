@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct Cvor{
+    char ime[15];
+    int visina;
+    int tezina;
+    struct Cvor *levi,*desni;
+}Cvor;
+
+
+int meni(){
+    printf("Meni: \n");
+    printf("1. Ucitavanje \n");
+    printf("2. Ispis \n");
+    printf("3. Ispis najvise i najnize osobe \n");
+    printf("4. Osobe lakse od odredjene tezine \n");
+    printf("5. Izlaz \n");
+    int broj;
+    scanf("%d",&broj);
+return broj;
+}
+
+Cvor *NapraviNovi(char *ime, int visina, int tezina){
+    Cvor *novi=malloc(sizeof(Cvor));
+    strcpy(novi->ime,ime);
+    novi->visina=visina;
+    novi->tezina=tezina;
+    novi->desni=NULL;
+    novi->levi=NULL;
+    return novi;
+}
+
+Cvor *UbaciUStablo(Cvor *koren, Cvor *novi){
+    if(koren!=NULL){
+        if(strcmp(novi->ime,koren->ime)>0){
+            koren->desni=UbaciUStablo(koren->desni,novi);
+        }
+        else{
+            koren->levi=UbaciUStablo(koren->levi,novi);
+        }
+    }
+    else{
+        return novi;
+    }
+    return koren;
+}
+void IspisSvih(Cvor *koren){
+    if(koren!=NULL){
+        IspisSvih(koren->levi);
+        printf("%s %d %d \n",koren->ime,koren->visina,koren->tezina);
+        IspisSvih(koren->desni);
+    }
+}
+Cvor *Ucitavanje(Cvor *koren){
+    FILE *f=fopen("2122jang2.txt","r");
+    char buffer[255];
+    while(fgets(buffer,sizeof(buffer),f)){
+        char *ime=strtok(buffer,",");
+        int visina=atoi(strtok(NULL,","));
+        int tezina=atoi(strtok(NULL,"\n"));
+        Cvor *novi=NapraviNovi(ime,visina,tezina);
+        koren=UbaciUStablo(koren,novi);
+    }
+    fclose(f);
+return koren;
+}
+void IspisNajlaksih(Cvor *koren,char *najlaksi,int *min_tezina){
+    if(koren!=NULL){
+        IspisNajlaksih(koren->levi,najlaksi,min_tezina);
+        if(koren->tezina<*min_tezina){
+            strcpy(najlaksi,koren->ime);
+            *min_tezina=koren->tezina;
+        }
+        IspisNajlaksih(koren->desni,najlaksi,min_tezina);
+    }
+}
+void OslobodiMemoriju(Cvor *koren){
+    if(koren!=NULL){
+        OslobodiMemoriju(koren->levi);
+        OslobodiMemoriju(koren->desni);
+        free(koren);
+    }
+}
+void IspisNajtezih(Cvor *koren, char *najtezi, char *max_tezina){
+    if(koren!=NULL){
+        IspisNajtezih(koren->levi,najtezi,max_tezina);
+        if(koren->tezina>*max_tezina){
+            strcpy(najtezi,koren->ime);
+            *max_tezina=koren->tezina;
+        }
+        IspisNajtezih(koren->desni,najtezi,max_tezina);
+    }
+}
+
+void IspisOsobeLakse(Cvor *koren, int broj){
+    if(koren!=NULL){
+        IspisOsobeLakse(koren->levi,broj);
+        if(koren->tezina<broj){
+            printf("%s %d %d \n",koren->ime, koren->visina, koren->tezina);
+        }
+        IspisOsobeLakse(koren->desni,broj);
+    }
+}
+int main(){
+    Cvor *koren=NULL;
+
+    while(1){
+        int broj=meni();
+        switch(broj){
+    case 1:
+        koren=Ucitavanje(koren);
+        break;
+    case 2:
+        IspisSvih(koren);
+        break;
+    case 3:
+        {
+        int min_tezina=koren->tezina;
+        char najlaksi[15];
+        int max_tezina=koren->tezina;
+        char najtezi[15];
+        IspisNajtezih(koren,najtezi,&max_tezina);
+        IspisNajlaksih(koren,najlaksi,&min_tezina);
+        printf("%s %d\n",najlaksi,min_tezina);
+        printf("%s %d\n",najtezi,max_tezina);
+        }
+        break;
+    case 4:
+        {
+
+
+        int broj;
+        printf("Unesi broj od koje da su lakse: ");
+        scanf("%d",&broj);
+        IspisOsobeLakse(koren, broj);
+        }
+        break;
+    case 5:
+
+        OslobodiMemoriju(koren);
+        return 0;
+        break;
+
+
+        }
+    }
+
+
+
+}
