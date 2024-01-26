@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Element {
+    char bank[25];
+    char name[25];
+    int cash;
+    char city[25];
+    struct Element* sledeci;
+} Element;
+
+
+Element* createElement(char* bank, char* name, int cash, char* city) {
+    Element* novi = (Element*)malloc(sizeof(Element));
+    strcpy(novi->bank, bank);
+    strcpy(novi->name, name);
+    novi->cash = cash;
+    strcpy(novi->city, city);
+    novi->sledeci = NULL;
+    return novi;
+}
+
+Element* dodajElement(Element* lista, Element* novi) {
+    if (lista == NULL || strcmp(lista->bank, novi->bank) > 0) {
+        novi->sledeci = lista;
+        return novi;
+    }
+    Element* t = lista;
+    while (t->sledeci != NULL && strcmp(t->sledeci->bank, novi->bank) < 0) {
+        t = t->sledeci;
+    }
+    novi->sledeci = t->sledeci;
+    t->sledeci = novi;
+    return lista;
+}
+
+Element* ucitaj(Element* lista) {
+    FILE* f = fopen("cent.txt", "r");
+    char line[100];
+    while (fgets(line, sizeof(line), f)) {
+        char* bank = strtok(line, ",");
+        char* name = strtok(NULL, ",");
+        int cash = atoi(strtok(NULL, ","));
+        char* city = strtok(NULL, "\n");
+        Element* novi = createElement(bank, name, cash, city);
+        lista = dodajElement(lista, novi);
+    }
+    fclose(f);
+    return lista;
+}
+
+void ispisi(Element* lista) {
+    while (lista != NULL) {
+        printf("| %s | %s | %d | %s |\n", lista->bank, lista->name, lista->cash, lista->city);
+        lista = lista->sledeci;
+    }
+}
+
+void izbrisi(Element* lista) {
+    while (lista != NULL) {
+        Element* temp = lista;
+        lista = lista->sledeci;
+        free(temp);
+    }
+}
+//-----------------------------------------------------------
+
+typedef struct Rich {
+    char grad[25];
+    int money;
+    struct Rich* next;
+} Rich;
+
+
+Rich* createRich(char* grad, int money) {
+    Rich* novi = (Rich*)malloc(sizeof(Rich));
+    strcpy(novi->grad, grad);
+    novi->money = money;
+    novi->next = NULL;
+    return novi;
+}
+
+Rich* fill(Element* lista) {
+    Rich* head = NULL;
+    while (lista != NULL) {
+        Rich* current = head;
+        while (current != NULL) {
+            if (strcmp(current->grad, lista->city) == 0) {
+                current->money += lista->cash;
+                break;
+            }
+            current = current->next;
+        }
+        if (current == NULL) {
+            Rich* newCity = createRich(lista->city, lista->cash);
+            newCity->next = head;
+            head = newCity;
+        }
+        lista = lista->sledeci;
+    }
+    return head;
+}
+
+void printCitiesAbove10k(Element* lista) {
+    Rich* richCities = fill(lista);
+    Rich* current = richCities;
+    printf("Cities with total cash above 10000:\n");
+    while (current != NULL) {
+        if (current->money > 10000) {
+            printf("%s\n", current->grad);
+        }
+        current = current->next;
+    }
+}
+//------------------------------------------------------------
+int meni() {
+    int opcija;
+    printf("1: UPISI\n");
+    printf("2: ISPISI\n");
+    printf("3: VISE OD 10000\n");
+    printf("4: DELETE SVI ISPOD\n");
+    printf("5: DELETE ALL\n");
+    scanf("%d", &opcija);
+    return opcija;
+}
+
+int main() {
+    Element* lista = NULL;
+    while (1) {
+        int broj = meni();
+        switch (broj) {
+            case 1:
+                lista = ucitaj(lista);
+                printf("LOADED!\n");
+                break;
+            case 2:
+                ispisi(lista);
+                break;
+            case 3:
+                printCitiesAbove10k(lista);
+                break;
+            case 4:
+                break;
+            case 5:
+                izbrisi(lista);
+                printf("gotovo\n");
+                return 0;
+            default:
+                printf("gg");
+        }
+    }
+}
+
